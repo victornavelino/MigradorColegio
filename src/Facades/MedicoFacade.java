@@ -22,7 +22,7 @@ import javax.persistence.Query;
  */
 public class MedicoFacade {
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("ProyectoDosPU");
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("MigradorColegioMedicoPU");
 
     private static MedicoFacade instance = null;
 
