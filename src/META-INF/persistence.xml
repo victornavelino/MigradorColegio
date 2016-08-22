@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="MigradorColegioMedicoPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>Entidades.Caja.Caja</class>
+    <class>Entidades.Localidad.Departamento</class>
+    <class>Entidades.Localidad.Localidad</class>
+    <class>Entidades.Localidad.Pais</class>
+    <class>Entidades.Localidad.Provincia</class>
+    <class>Entidades.Medico.Especialidad</class>
+    <class>Entidades.Medico.Especializacion</class>
+    <class>Entidades.Medico.Facultad</class>
+    <class>Entidades.Medico.Medico</class>
+    <class>Entidades.Medico.Organismo</class>
+    <class>Entidades.Medico.Recertificacion</class>
+    <class>Entidades.Medico.TipoEspecialidad</class>
+    <class>Entidades.Medico.TipoMedico</class>
+    <class>Entidades.Medico.TipoSocio</class>
+    <class>Entidades.Medico.UnidadFormadora</class>
+    <class>Entidades.Pago.Banco</class>
+    <class>Entidades.Pago.Concepto</class>
+    <class>Entidades.Pago.Cuenta</class>
+    <class>Entidades.Pago.Pago</class>
+    <class>Entidades.Persona.CorreoElectronico</class>
+    <class>Entidades.Persona.DocumentoIdentidad</class>
+    <class>Entidades.Persona.Domicilio</class>
+    <class>Entidades.Persona.Persona</class>
+    <class>Entidades.Persona.Sexo</class>
+    <class>Entidades.Persona.Telefono</class>
+    <class>Entidades.Persona.TipoDocumento</class>
+    <class>Entidades.Persona.TipoTelefono</class>
+    <class>Entidades.Usuario.Usuario</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/colegio"/>
+      <property name="javax.persistence.jdbc.password" value=""/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="postgres"/>
+      <property name="javax.persistence.schema-generation.database.action" value="create"/>
+    </properties>
+  </persistence-unit>
+</persistence>
