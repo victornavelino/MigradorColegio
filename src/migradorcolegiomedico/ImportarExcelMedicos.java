@@ -5,10 +5,15 @@
  */
 package migradorcolegiomedico;
 
+import Controladores.SexoJpaController;
 import Entidades.Medico.Medico;
 import Entidades.Persona.Persona;
 import Facades.MedicoFacade;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import jxl.*;
 
 /**
@@ -18,6 +23,8 @@ import jxl.*;
 public class ImportarExcelMedicos {
 
     private Medico medico;
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("MigradorColegioMedicoPU");
+    SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
 
     private void leerArchivoExcel(String archivoDestino) {
 
@@ -33,7 +40,7 @@ public class ImportarExcelMedicos {
             System.out.println("Nombre de la Hoja\t"
                     + archivoExcel.getSheet(0).getName());
             // Recorre cada fila de la  hoja 
-            for (int fila = 0; fila < numFilas; fila++) {
+            for (int fila = 1; fila < numFilas; fila++) {
                 medico = new Medico();
                 medico.setPersona(new Persona());
 
@@ -53,6 +60,22 @@ public class ImportarExcelMedicos {
                             } catch (Exception e) {
                             }
                             break;
+                        case "2":
+                            if (dato.contains("Masculino")) {
+                                medico.getPersona().setSexo(new SexoJpaController(emf).findSexo(1L));
+                            }
+                            if (dato.contains("Femenino")) {
+                                medico.getPersona().setSexo(new SexoJpaController(emf).findSexo(2L));
+                            }
+                            break;
+                        case "3":
+                            try {
+                                medico.getPersona().setFechaNacimiento(formatoFecha.parse(dato.substring(0, 10)));
+                            } catch (Exception e) {
+                            }
+                            break;
+                        case "4":
+                            medico.getPersona().setEstadoCivil(null);
 
                     }
                     System.out.print(dato + " ");
@@ -70,8 +93,7 @@ public class ImportarExcelMedicos {
 
     public static void main(String arg[]) {
         ImportarExcelMedicos excel = new ImportarExcelMedicos();
-        excel.leerArchivoExcel("/home/hugo/LEGAJOMEDICO.xls");
-        excel.cargar();
+        excel.leerArchivoExcel("/home/nago/LEGAJOMEDICO.xls");
     }
 
     private void cargar() {
