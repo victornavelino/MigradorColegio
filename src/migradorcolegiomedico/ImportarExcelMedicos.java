@@ -6,24 +6,33 @@
 package migradorcolegiomedico;
 
 import Controladores.DocumentoIdentidadJpaController;
+import Controladores.EspecialidadJpaController;
 import Controladores.EstadoCivilJpaController;
 import Controladores.SexoJpaController;
 import Controladores.TipoDocumentoJpaController;
+import Controladores.TipoTelefonoJpaController;
+import Entidades.Medico.Especialidad;
 import Entidades.Medico.Medico;
+import Entidades.Persona.CorreoElectronico;
 import Entidades.Persona.DocumentoIdentidad;
 import Entidades.Persona.Domicilio;
 import Entidades.Persona.EstadoCivil;
 import Entidades.Persona.Persona;
+import Entidades.Persona.Sexo;
 import Entidades.Persona.Telefono;
+import Entidades.Persona.TipoTelefono;
 import Facades.MedicoFacade;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JFileChooser;
@@ -44,7 +53,43 @@ public class ImportarExcelMedicos {
     public static void main(String arg[]) {
         System.out.println("Importador de Archivos:");
         ImportarExcelMedicos excel = new ImportarExcelMedicos();
+        //excel.crearSexo();
+        excel.crearTipoTelefono();
         excel.importar();//LEGAJOMEDICO.xls --> MEDICOS
+    }
+
+    private void crearSexo() {
+        Sexo sexo = new SexoJpaController(emf).findSexo(1L);
+        if (sexo == null) {
+            sexo.setId(1L);
+            sexo.setDescripcion("Masculino".toUpperCase());
+            new SexoJpaController(emf).create(sexo);
+        }
+        sexo = new SexoJpaController(emf).findSexo(2L);
+        if (sexo == null) {
+            sexo = new Sexo();
+            sexo.setId(1L);
+            sexo.setDescripcion("Femenino".toUpperCase());
+            new SexoJpaController(emf).create(sexo);
+
+        }
+    }
+
+    private void crearTipoTelefono() {
+        TipoTelefono tipoTelefono = new TipoTelefonoJpaController(emf).findTipoTelefono(1L);
+        if (tipoTelefono == null) {
+            tipoTelefono.setId(1L);
+            tipoTelefono.setDescripcion("Fijo".toUpperCase());
+            new TipoTelefonoJpaController(emf).create(tipoTelefono);
+        }
+        tipoTelefono = new TipoTelefonoJpaController(emf).findTipoTelefono(2L);
+        if (tipoTelefono == null) {
+            tipoTelefono = new TipoTelefono();
+            tipoTelefono.setId(1L);
+            tipoTelefono.setDescripcion("Celular".toUpperCase());
+            new TipoTelefonoJpaController(emf).create(tipoTelefono);
+
+        }
     }
 
     private void importar() {
@@ -175,17 +220,112 @@ public class ImportarExcelMedicos {
                                 //Telefono
                                 List<Telefono> telefonos = new ArrayList<>();
                                 telefonos.add(new Telefono());
+                                try {
+                                    TipoTelefono tipoTelefono = new TipoTelefonoJpaController(emf).findTipoTelefono(1L);
+                                    telefonos.get(0).setTipoTelefono(tipoTelefono);
+                                } catch (Exception e) {
+                                }
                                 telefonos.get(0).setNumero(dato);
+
                                 medico.getPersona().setTelefonos(telefonos);//falta agregar el tipo
                                 break;
                             case "18":
                                 //Celular
                                 Telefono t = new Telefono();
+                                try {
+                                    TipoTelefono tipoTelefono = new TipoTelefonoJpaController(emf).findTipoTelefono(2L);
+                                    t.setTipoTelefono(tipoTelefono);
+                                } catch (Exception e) {
+                                }
                                 t.setNumero(dato);
                                 medico.getPersona().getTelefonos().add(t);
                                 ;//falta agregar el tipo
 
                                 break;
+                            case "19":
+                                //EMAIL
+                                if (!dato.isEmpty()) {
+                                    List<CorreoElectronico> ces = new ArrayList<>();
+                                    ces.add(new CorreoElectronico());
+                                    ces.get(0).setDireccion(dato);
+                                    medico.getPersona().setCorreosElectronicos(null);
+                                }
+                                break;
+                            case "20": {
+                                try {
+                                    //FECHA INSCRIPCION
+                                    medico.setFechaInscripcion(formatoFecha.parse(dato.substring(0, 10)));
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(ImportarExcelMedicos.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            break;
+                            case "21":
+                                //TITULO
+                                medico.setTitulo(dato);
+                                break;
+                            case "22":
+                                //IDESPECIALIDAD
+                                Especialidad especialidadBuscada = new EspecialidadJpaController(emf).findEspecialidad(Long.parseLong(dato));
+                                if (especialidadBuscada == null) {
+                                    especialidadBuscada = new Especialidad();
+                                    especialidadBuscada.setId(Long.parseLong(dato));
+                                    especialidadBuscada.setDescripcion(dato);
+                                    new EspecialidadJpaController(emf).create(especialidadBuscada);
+                                }//falta terminar
+                             //   List<Es> especialidads = new ArrayList<>();
+                                
+                               // medico.getPersona().setEespecialidads);
+                                break;
+                            case "23":
+                                //FECHARECIBIDO 
+                                break;
+                            case "24":
+                                //UNIVERSIDAD
+                                break;
+                            case "25":
+                            //FACULTAD
+                            case "26":
+                                //PROVINCIARECIBIDO
+                                break;
+                            case "27":
+                                //NOMBREUSUARIO
+                                break;
+                            case "28":
+                            //TIPOUSUARIO	
+                            case "29":
+                                //FECHAREGISTRO	
+                                break;
+                            case "30":
+                                //HORAREGISTRO	
+                                break;
+                            case "31":
+                                //FECHABAJA	
+                                break;
+                            case "32":
+                                //MOTIVOBAJA	
+                                break;
+                            case "33":
+                                //MATRICULANACIONAL	
+                                break;
+                            case "34":
+                                //NROINSCRIPCION	
+                                break;
+                            case "35":
+                                //TIPOSOCIO	
+                                break;
+                            case "36":
+                                //ORGANISMO	
+                                break;
+                            case "37":
+                                //LIBROINSCRIPCION	
+                                break;
+                            case "38":
+                                //FOLIOINSCRIPCION	
+                                break;
+                            case "39":
+                            //FECHATITULO
+
                         }
                     }
                     MedicoFacade.getInstance().alta(medico);
