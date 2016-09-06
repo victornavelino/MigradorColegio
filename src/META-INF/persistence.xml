@@ -30,6 +30,7 @@
     <class>Entidades.Persona.TipoDocumento</class>
     <class>Entidades.Persona.TipoTelefono</class>
     <class>Entidades.Usuario.Usuario</class>
+    <class>Entidades.Persona.EstadoCivil</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/colegio"/>
       <property name="javax.persistence.jdbc.password" value=""/>
