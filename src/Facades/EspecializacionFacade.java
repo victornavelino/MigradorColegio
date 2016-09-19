@@ -5,9 +5,10 @@
  */
 package Facades;
 
-import Controladores.MedicoJpaController;
+import Controladores.EspecializacionJpaController;
 import Controladores.exceptions.NonexistentEntityException;
-import Entidades.Medico.Medico;
+import Entidades.Medico.Especialidad;
+import Entidades.Medico.Especializacion;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,16 +21,16 @@ import javax.persistence.Query;
  *
  * @author hugo
  */
-public class MedicoFacade {
+public class EspecializacionFacade {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("MigradorColegioMedicoPU");
 
-    private static MedicoFacade instance = null;
+    private static EspecializacionFacade instance = null;
 
-    protected MedicoFacade() {
+    protected EspecializacionFacade() {
     }
 
-    public static MedicoFacade getInstance() {
+    public static EspecializacionFacade getInstance() {
         if (instance == null) {
             createInstance();
         }
@@ -40,7 +41,7 @@ public class MedicoFacade {
 
     private synchronized static void createInstance() {
         if (instance == null) {
-            instance = new MedicoFacade();
+            instance = new EspecializacionFacade();
         }
     }
 
@@ -50,54 +51,55 @@ public class MedicoFacade {
         throw new CloneNotSupportedException();
     }
 
-    public void alta(Medico medico) {
-        new MedicoJpaController(emf).create(medico);
+    public void alta(Especializacion especializacion) {
+        new EspecializacionJpaController(emf).create(especializacion);
     }
 
-    public Medico buscar(Long id) {
-        return new MedicoJpaController(emf).findMedico(id);
+    public Especializacion buscar(Long id) {
+        return new EspecializacionJpaController(emf).findEspecializacion(id);
     }
 
-    public void modificar(Medico medico) throws Exception {
+    public void modificar(Especializacion especializacion) throws Exception {
         try {
-            new MedicoJpaController(emf).edit(medico);
+            new EspecializacionJpaController(emf).edit(especializacion);
         } catch (NonexistentEntityException ex) {
-            Logger.getLogger(MedicoFacade.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EspecializacionFacade.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void eliminar(long id) {
         try {
-            new MedicoJpaController(emf).destroy(id);
+            new EspecializacionJpaController(emf).destroy(id);
         } catch (NonexistentEntityException ex) {
-            Logger.getLogger(MedicoFacade.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EspecializacionFacade.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public List<Medico> getTodos() {
+    public List<Especializacion> getTodos() {
         EntityManagerFactory emfa = Persistence.createEntityManagerFactory("ProyectoDosPU");
         EntityManager em = emfa.createEntityManager();
-        Query qu = em.createQuery("SELECT s FROM Medico s");
+        Query qu = em.createQuery("SELECT s FROM Especializacion s");
         em.getEntityManagerFactory().getCache().evictAll();
         return qu.getResultList();
     }
 
-    public List<Medico> buscarPorDescripcion(String descripcion) {
+    public List<Especializacion> buscarPorEspecialidad(Especialidad especialidad) {
         EntityManager em = emf.createEntityManager();
-        Query qu = em.createQuery("SELECT s FROM Medico s WHERE s.titulo LIKE :descripcion");
-        qu.setParameter("descripcion", "%" + descripcion.toUpperCase() + "%");
+        Query qu = em.createQuery("SELECT s FROM Especializacion s WHERE s.especialidad = :especialidad");
+        qu.setParameter("especialidad", especialidad);
         return qu.getResultList();
     }
 
-    public Medico buscarPorMatricula(String matriculaProfesional) {
+    public Especializacion buscarPorMatriculaEspecialidad(String descripcion) {
         EntityManager em = emf.createEntityManager();
-        Query qu = em.createQuery("SELECT s FROM Medico s WHERE s.matriculaProfesional LIKE :matriculaProfesional");
-        qu.setParameter("matriculaProfesional", matriculaProfesional);
+        Query qu = em.createQuery("SELECT s FROM Especializacion s WHERE s.matriculaEspecialidad = :descripcion");
+        qu.setParameter("descripcion", descripcion);
         qu.setMaxResults(0);
         try {
-            return (Medico) qu.getSingleResult();
+            return (Especializacion) qu.getSingleResult();
         } catch (Exception e) {
             return null;
         }
     }
+
 }

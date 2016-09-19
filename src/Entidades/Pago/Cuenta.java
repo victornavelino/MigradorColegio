@@ -21,6 +21,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "pago_cuenta")
 public class Cuenta implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +62,18 @@ public class Cuenta implements Serializable {
     public void setHabilitada(Boolean habilitada) {
         this.habilitada = habilitada;
     }
+
+    public Cuenta(Long id, String descripcion, BigDecimal importe, Boolean habilitada) {
+        this.id = id;
+        this.descripcion = descripcion;
+        this.importe = importe;
+        this.habilitada = habilitada;
+    }
+
+    public Cuenta() {
+    }
     
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -86,5 +98,5 @@ public class Cuenta implements Serializable {
     public String toString() {
         return descripcion;
     }
-    
+
 }

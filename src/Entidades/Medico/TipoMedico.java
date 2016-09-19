@@ -87,6 +87,18 @@ public class TipoMedico implements Serializable {
         return true;
     }
 
+    public TipoMedico() {
+    }
+
+    
+    public TipoMedico(Long id, String descripcion, boolean factura, boolean generalistado, String observaciones) {
+        this.id = id;
+        this.descripcion = descripcion.toUpperCase();
+        this.factura = factura;
+        this.generalistado = generalistado;
+        this.observaciones = observaciones.toUpperCase();
+    }
+
     @Override
     public String toString() {
         return "Entidades.Medico.TipoMedico[ id=" + id + " ]";
