@@ -454,6 +454,7 @@ public class ImportarExcelMedicos {
                         case "0":
                             //Matricula
                             medico = MedicoFacade.getInstance().buscarPorMatricula(dato);
+                            especializacion.setMedico(medico);
                             break;
                         case "1":
                             //IDITEMCUENTA
@@ -463,11 +464,8 @@ public class ImportarExcelMedicos {
                         case "2":
                             //ESPECIALIDAD	
                             try {
-                                especialidad = EspecialidadFacade.getInstance().buscarPorNombreExacto(dato);
-                                if (especialidad == null) {
-                                    especialidad.setNombreEspecialidad(dato);
-                                    EspecialidadFacade.getInstance().alta(especialidad);
-                                }
+                                especialidad = new EspecialidadJpaController(emf).findEspecialidad(Long.parseLong(dato));
+                                
                             } catch (Exception e) {
                             }
                             especializacion.setEspecialidad(especialidad);
