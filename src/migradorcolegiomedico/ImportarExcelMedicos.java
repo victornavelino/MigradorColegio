@@ -470,12 +470,16 @@ public class ImportarExcelMedicos {
 
                             } catch (Exception e) {
                             }
-                            especializacion.setEspecialidad(especialidad);
+                            if (!dato.contains("NULL")) {
+                                especializacion.setEspecialidad(especialidad);
+                            }
                             break;
                         case "3":
                             //MATRICULAESPECIALIDAD
                             try {
-                                especializacion.setMatriculaEspecialidad(dato);
+                                if (!dato.contains("NULL")) {
+                                    especializacion.setMatriculaEspecialidad(dato);
+                                }
                             } catch (Exception e) {
                             }
                             break;
@@ -522,7 +526,9 @@ public class ImportarExcelMedicos {
                             } catch (NumberFormatException numberFormatException) {
                             }
                             try {
-                                especializacion.setUnidadFormadora(unidadFormadora);
+                                if (!dato.contains("NULL")) {
+                                    especializacion.setUnidadFormadora(unidadFormadora);
+                                }
                             } catch (Exception e) {
                             }
                             break;
