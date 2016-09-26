@@ -464,8 +464,10 @@ public class ImportarExcelMedicos {
                         case "2":
                             //ESPECIALIDAD	
                             try {
-                                especialidad = new EspecialidadJpaController(emf).findEspecialidad(Long.parseLong(dato));
-                                
+                                if (!dato.contains("NULL")) {
+                                    especialidad = new EspecialidadJpaController(emf).findEspecialidad(Long.parseLong(dato));
+                                }
+
                             } catch (Exception e) {
                             }
                             especializacion.setEspecialidad(especialidad);
@@ -480,33 +482,42 @@ public class ImportarExcelMedicos {
                         case "4":
                             //FECHAMATRICULACION
                             try {
-                                especializacion.setFechaMatriculacion(formatoFecha.parse(dato.substring(0, 10)));
+                                if (!dato.contains("NULL")) {
+
+                                    especializacion.setFechaMatriculacion(formatoFecha.parse(dato.substring(0, 10)));
+                                }
                             } catch (Exception e) {
                             }
                             break;
                         case "5":
                             //LIBRO	
                             try {
-                                especializacion.setLibro(dato);
+                                if (!dato.contains("NULL")) {
+                                    especializacion.setLibro(dato);
+                                }
                             } catch (Exception e) {
                             }
                             break;
                         case "6":
                             //FOLIO
                             try {
-                                especializacion.setFolio(dato);
+                                if (!dato.contains("NULL")) {
+                                    especializacion.setFolio(dato);
+                                }
                             } catch (Exception e) {
                             }
                             break;
                         case "7":
                             //	UNIVERSIDAD
                             try {
-                                unidadFormadora = new UnidadFormadoraJpaController(emf).findUnidadFormadora(Long.parseLong(dato)); //TODO aca hay que validar por nombre
-                                if (unidadFormadora == null) {
-                                    unidadFormadora = new UnidadFormadora();
-                                    unidadFormadora.setId(Long.parseLong(dato));
-                                    unidadFormadora.setDescripcion(dato);
-                                    new UnidadFormadoraJpaController(emf).create(unidadFormadora);
+                                if (!dato.contains("NULL")) {
+                                    unidadFormadora = new UnidadFormadoraJpaController(emf).findUnidadFormadora(Long.parseLong(dato)); //TODO aca hay que validar por nombre
+                                    if (unidadFormadora == null) {
+                                        unidadFormadora = new UnidadFormadora();
+                                        unidadFormadora.setId(Long.parseLong(dato));
+                                        unidadFormadora.setDescripcion(dato);
+                                        new UnidadFormadoraJpaController(emf).create(unidadFormadora);
+                                    }
                                 }
                             } catch (NumberFormatException numberFormatException) {
                             }

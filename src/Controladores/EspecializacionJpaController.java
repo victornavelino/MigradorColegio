@@ -19,7 +19,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author hugo
+ * @author franco
  */
 public class EspecializacionJpaController implements Serializable {
 
