@@ -42,7 +42,7 @@ public abstract class Base implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaModificado;
 
-    private Boolean eliminado = true;
+    private Boolean eliminado = false;
 
     public Boolean getEliminado() {
         return eliminado;
