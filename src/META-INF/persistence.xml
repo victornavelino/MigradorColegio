@@ -31,6 +31,14 @@
     <class>Entidades.Persona.TipoTelefono</class>
     <class>Entidades.Usuario.Usuario</class>
     <class>Entidades.Persona.EstadoCivil</class>
+    <class>Entidades.Base.Base</class>
+    <class>Entidades.Caja.Egreso</class>
+    <class>Entidades.Caja.Ingreso</class>
+    <class>Entidades.Caja.MovimientoCaja</class>
+    <class>Entidades.Caja.TipoDeEgreso</class>
+    <class>Entidades.Caja.TipoDeIngreso</class>
+    <class>Entidades.Reporte.Parametro</class>
+    <class>Entidades.Reporte.ReporteGenerico</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/colegio"/>
       <property name="javax.persistence.jdbc.password" value=""/>

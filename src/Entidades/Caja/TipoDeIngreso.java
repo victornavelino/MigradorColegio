@@ -1,12 +1,13 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Entidades.Pago;
+package Entidades.Caja;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,19 +17,22 @@ import javax.persistence.Table;
 
 /**
  *
- * @author hugo
+ * @author root
  */
 @Entity
-@Table(name = "pago_cuenta")
-public class Cuenta implements Serializable {
+@Table(name = "caja_movimientocaja_tipodeingreso")
+public class TipoDeIngreso implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String descripcion;
-    @Column(scale = 2, precision = 12)
+    @Basic(optional = false)
+    @Column(scale = 3, precision = 12)
     private BigDecimal importe;
-    private Boolean habilitada;
+    private boolean habilitado;
+    
 
     public Long getId() {
         return id;
@@ -54,25 +58,14 @@ public class Cuenta implements Serializable {
         this.importe = importe;
     }
 
-    public Boolean getHabilitada() {
-        return habilitada;
+    public boolean isHabilitado() {
+        return habilitado;
     }
 
-    public void setHabilitada(Boolean habilitada) {
-        this.habilitada = habilitada;
+    public void setHabilitado(boolean habilitado) {
+        this.habilitado = habilitado;
     }
-    
-    public Cuenta(Long id, String descripcion, BigDecimal importe, Boolean habilitada) {
-        this.id = id;
-        this.descripcion = descripcion;
-        this.importe = importe;
-        this.habilitada = habilitada;
-    }
-
-    public Cuenta() {
-    }
-    
-
+  
     @Override
     public int hashCode() {
         int hash = 0;
@@ -83,10 +76,10 @@ public class Cuenta implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Cuenta)) {
+        if (!(object instanceof TipoDeIngreso)) {
             return false;
         }
-        Cuenta other = (Cuenta) object;
+        TipoDeIngreso other = (TipoDeIngreso) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -97,5 +90,5 @@ public class Cuenta implements Serializable {
     public String toString() {
         return descripcion;
     }
-    
+
 }
