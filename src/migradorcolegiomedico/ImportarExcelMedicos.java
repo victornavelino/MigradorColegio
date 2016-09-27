@@ -733,7 +733,9 @@ public class ImportarExcelMedicos {
                         case "6":
                             //AÑO	      	
                             try {
-                                pago.setAnio(Integer.valueOf(dato));
+                                if (!dato.contains("NULL")) {
+                                    pago.setAnio(Integer.valueOf(dato));
+                                }
 
                             } catch (Exception e) {
                             }
@@ -749,7 +751,9 @@ public class ImportarExcelMedicos {
                         case "8":
                             //IMPORTE	 								
                             try {
-                                pago.setImporte(new BigDecimal(dato));
+                                if (!dato.contains("NULL")) {
+                                    pago.setImporte(new BigDecimal(dato));
+                                }
 
                             } catch (Exception e) {
                             }
@@ -757,7 +761,9 @@ public class ImportarExcelMedicos {
                         case "9":
                             //IDNROCOMPROBANTE	 									
                             try {
-                                pago.setNroRecibo(dato);
+                                if (!dato.contains("NULL")) {
+                                    pago.setNroRecibo(dato);
+                                }
 
                             } catch (Exception e) {
                             }
@@ -773,17 +779,21 @@ public class ImportarExcelMedicos {
                         case "11":
 //                            //FECHAREGISTRO								
                             try {
-                                fecha = dato.split("\\s+")[0].concat(" ");
+                                if (!dato.contains("NULL")) {
+                                    fecha = dato.split("\\s+")[0].concat(" ");
+                                }
                             } catch (Exception e) {
                             }
                             break;
                         case "12":
                             //	HORAREGISTRO// 											
                             try {
-                                fecha += dato.split("\\s+")[1].concat(" ").concat(dato.split("\\s+")[2]).replace(".", "");
-                                DateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
-                                Date date = inputFormat.parse(fecha);
-                                pago.setFechaPago(date);
+                                if (!dato.contains("NULL")) {
+                                    fecha += dato.split("\\s+")[1].concat(" ").concat(dato.split("\\s+")[2]).replace(".", "");
+                                    DateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+                                    Date date = inputFormat.parse(fecha);
+                                    pago.setFechaPago(date);
+                                }
                             } catch (Exception e) {
                                 System.out.println("error Parse:  " + e + " fila: " + fila);
                             }
@@ -831,7 +841,9 @@ public class ImportarExcelMedicos {
 
                             try {
                                 medico = MedicoFacade.getInstance().buscarPorMatricula(dato);
-                                recertificacion.setMedico(medico);
+                                if (!dato.contains("NULL")) {
+                                    recertificacion.setMedico(medico);
+                                }
                             } catch (NumberFormatException numberFormatException) {
                             }
                             break;
@@ -839,7 +851,9 @@ public class ImportarExcelMedicos {
                             //IDITEMCUENTA	
 
                             try {
-                                recertificacion.setCuenta(new CuentaJpaController(emf).findCuenta(Long.parseLong(dato)));
+                                if (!dato.contains("NULL")) {
+                                    recertificacion.setCuenta(new CuentaJpaController(emf).findCuenta(Long.parseLong(dato)));
+                                }
                             } catch (Exception e) {
                             }
                             break;
@@ -847,14 +861,18 @@ public class ImportarExcelMedicos {
                             //MATRICULAESPECIALIDAD		
                             try {
                                 Especializacion buscarPorMatricula = EspecializacionFacade.getInstance().buscarPorMatriculaEspecialidad(dato);
-                                recertificacion.setEspecializacion(buscarPorMatricula);
+                                if (!dato.contains("NULL")) {
+                                    recertificacion.setEspecializacion(buscarPorMatricula);
+                                }
                             } catch (Exception e) {
                             }
                             break;
                         case "3":
                             //FECHARECERTIFICACION			
                             try {
-                                recertificacion.setFechaRecertificacion(formatoFecha.parse(dato.substring(0, 10)));
+                                if (!dato.contains("NULL")) {
+                                    recertificacion.setFechaRecertificacion(formatoFecha.parse(dato.substring(0, 10)));
+                                }
 
                             } catch (Exception e) {
                             }
@@ -880,7 +898,9 @@ public class ImportarExcelMedicos {
                         case "6":
                             //ACTANRO	
                             try {
-                                recertificacion.setNroActa(dato);
+                                if (!dato.contains("NULL")) {
+                                    recertificacion.setNroActa(dato);
+                                }
 
                             } catch (Exception e) {
                             }
@@ -888,7 +908,9 @@ public class ImportarExcelMedicos {
                         case "7":
                             //RESOLUCION									
                             try {
-                                recertificacion.setNroResolucion(dato);
+                                if (!dato.contains("NULL")) {
+                                    recertificacion.setNroResolucion(dato);
+                                }
 
                             } catch (Exception e) {
                             }
@@ -896,7 +918,9 @@ public class ImportarExcelMedicos {
                         case "8":
                             //LIBRO								
                             try {
-                                recertificacion.setLibro(dato);
+                                if (!dato.contains("NULL")) {
+                                    recertificacion.setLibro(dato);
+                                }
 
                             } catch (Exception e) {
                             }
@@ -904,7 +928,9 @@ public class ImportarExcelMedicos {
                         case "9":
                             //FOLIO									
                             try {
-                                recertificacion.setFolio(dato);
+                                if (!dato.contains("NULL")) {
+                                    recertificacion.setFolio(dato);
+                                }
 
                             } catch (Exception e) {
                             }
@@ -936,7 +962,9 @@ public class ImportarExcelMedicos {
                         case "13":
                             //OBSERVACIONES									
                             try {
-                                recertificacion.setObservaciones(dato);
+                                if (!dato.contains("NULL")) {
+                                    recertificacion.setObservaciones(dato);
+                                }
 
                             } catch (Exception e) {
                             }
@@ -944,7 +972,9 @@ public class ImportarExcelMedicos {
                         case "14":
                             //FECHAVENCIMIENTO								
                             try {
-                                recertificacion.setFechaVencimiento(formatoFecha.parse(dato.substring(0, 10)));
+                                if (!dato.contains("NULL")) {
+                                    recertificacion.setFechaVencimiento(formatoFecha.parse(dato.substring(0, 10)));
+                                }
 
                             } catch (Exception e) {
                             }
