@@ -19,6 +19,7 @@ import Controladores.TipoDocumentoJpaController;
 import Controladores.TipoMedicoJpaController;
 import Controladores.TipoTelefonoJpaController;
 import Controladores.UnidadFormadoraJpaController;
+import Controladores.UsuarioJpaController;
 import Entidades.Medico.Especialidad;
 import Entidades.Medico.Especializacion;
 import Entidades.Medico.Facultad;
@@ -38,6 +39,7 @@ import Entidades.Persona.Persona;
 import Entidades.Persona.Sexo;
 import Entidades.Persona.Telefono;
 import Entidades.Persona.TipoTelefono;
+import Entidades.Usuario.Usuario;
 import Facades.EspecialidadFacade;
 import Facades.EspecializacionFacade;
 import Facades.MedicoFacade;
@@ -74,6 +76,7 @@ public class ImportarExcelMedicos {
     public static void main(String arg[]) {
         System.out.println("Importador de Archivos:");
         ImportarExcelMedicos excel = new ImportarExcelMedicos();
+        excel.crearUsuario();
         excel.crearSexo();
         excel.crearTipoTelefono();
         excel.crearBanco();
@@ -1154,6 +1157,19 @@ public class ImportarExcelMedicos {
         if (tipoMedico == null) {
             tipoMedico = new TipoMedico(14L, "Suspendido", false, false, "");
             new TipoMedicoJpaController(emf).create(tipoMedico);
+        }
+    }
+
+    private void crearUsuario() {
+        Usuario usuario = new UsuarioJpaController(emf).findUsuario(1L);
+        if (usuario == null) {
+            usuario = new Usuario();
+            usuario.setId(1L);
+            usuario.setNombre("Administrador");
+            usuario.setApellido("Administrador");
+            usuario.setUsuario("admin");
+            usuario.setPassword("0478721f1106c2a631a90181bac7efc77767a3903eb9220687bff8a14e940fa7");//hugo
+            new UsuarioJpaController(emf).create(usuario);
         }
     }
 
