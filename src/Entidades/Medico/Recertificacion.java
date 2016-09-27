@@ -40,8 +40,6 @@ public class Recertificacion implements Serializable {
     private String nroResolucion;
     private String libro;
     private String folio;
-    @OneToOne
-    private Usuario usuario;
     private String observaciones;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaVencimiento;
@@ -117,14 +115,6 @@ public class Recertificacion implements Serializable {
 
     public void setFolio(String folio) {
         this.folio = folio;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 
     public String getObservaciones() {
