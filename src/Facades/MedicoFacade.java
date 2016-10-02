@@ -89,9 +89,9 @@ public class MedicoFacade {
         return qu.getResultList();
     }
 
-    public Medico buscarPorMatricula(String matriculaProfesional) {
+    public Medico buscarPorMatricula(int matriculaProfesional) {
         EntityManager em = emf.createEntityManager();
-        Query qu = em.createQuery("SELECT s FROM Medico s WHERE s.matriculaProfesional LIKE :matriculaProfesional");
+        Query qu = em.createQuery("SELECT s FROM Medico s WHERE s.matriculaProfesional = :matriculaProfesional");
         qu.setParameter("matriculaProfesional", matriculaProfesional);
         qu.setMaxResults(0);
         try {

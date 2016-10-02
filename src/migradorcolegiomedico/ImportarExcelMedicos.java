@@ -163,7 +163,7 @@ public class ImportarExcelMedicos {
                 Medico medico = new Medico();
                 medico.setPersona(new Persona());
 
-                for (int columna = 0; columna < sheet.getColumns(); columna++) { // Recorre  cada fila
+                for (int columna = 0; columna < sheet.getColumns(); columna++) { // Recorre  cada columna
                     dato = sheet.getCell(columna, fila).getContents();
                     //declar clases comunes
 //                    Especialidad especialidadBuscada = new Especialidad();
@@ -171,7 +171,10 @@ public class ImportarExcelMedicos {
 //                    UnidadFormadora unidadFormadora = new UnidadFormadora();
                     switch (String.valueOf(columna)) {
                         case "0":
-                            medico.setMatriculaProfesional(dato);
+                            try {
+                                medico.setMatriculaProfesional(Integer.parseInt(dato));
+                            } catch (Exception e) {
+                            }
                             break;
                         case "1":
                             try {
@@ -320,7 +323,9 @@ public class ImportarExcelMedicos {
                         break;
                         case "21":
                             //TITULO
-                            medico.setTitulo(dato);
+                            if (!dato.contains("NULL")) {
+                                medico.setTitulo(dato);
+                            }
                             break;
                         case "22":
                         //IDESPECIALIDAD
@@ -456,8 +461,11 @@ public class ImportarExcelMedicos {
                     switch (String.valueOf(columna)) {
                         case "0":
                             //Matricula
-                            medico = MedicoFacade.getInstance().buscarPorMatricula(dato);
-                            especializacion.setMedico(medico);
+                            try {
+                                medico = MedicoFacade.getInstance().buscarPorMatricula(Integer.parseInt(dato));
+                                especializacion.setMedico(medico);
+                            } catch (Exception e) {
+                            }
                             break;
                         case "1":
                             //IDITEMCUENTA
@@ -481,7 +489,7 @@ public class ImportarExcelMedicos {
                             //MATRICULAESPECIALIDAD
                             try {
                                 if (!dato.contains("NULL")) {
-                                    especializacion.setMatriculaEspecialidad(dato);
+                                    especializacion.setMatriculaEspecialidad(Integer.parseInt(dato));
                                 }
                             } catch (Exception e) {
                             }
@@ -640,7 +648,7 @@ public class ImportarExcelMedicos {
                             //MATRICULAPROVINCIAL	
 
                             try {
-                                medico = MedicoFacade.getInstance().buscarPorMatricula(dato);
+                                medico = MedicoFacade.getInstance().buscarPorMatricula(Integer.parseInt(dato));
                                 pago.setMedico(medico);
                             } catch (NumberFormatException numberFormatException) {
                             }
@@ -838,29 +846,30 @@ public class ImportarExcelMedicos {
                     switch (String.valueOf(columna)) {
                         case "0":
                             //MATRICULAPROVINCIAL	
-
-                            try {
-                                medico = MedicoFacade.getInstance().buscarPorMatricula(dato);
-                                if (!dato.contains("NULL")) {
-                                    recertificacion.setMedico(medico);
-                                }
-                            } catch (NumberFormatException numberFormatException) {
-                            }
+//
+//                            try {
+//                                medico = MedicoFacade.getInstance().buscarPorMatricula(dato);
+//                                if (!dato.contains("NULL")) {
+//                                    recertificacion.setMedico(medico);
+//                                }
+//                            } catch (NumberFormatException numberFormatException) {
+//                            }
                             break;
                         case "1":
-                            //IDITEMCUENTA	
+                        //IDITEMCUENTA	
 
-                            try {
-                                if (!dato.contains("NULL")) {
-                                    recertificacion.setCuenta(new CuentaJpaController(emf).findCuenta(Long.parseLong(dato)));
-                                }
-                            } catch (Exception e) {
-                            }
-                            break;
+//                            try {
+//                                if (!dato.contains("NULL")) {
+//                                    recertificacion.setCuenta(new CuentaJpaController(emf).findCuenta(Long.parseLong(dato)));
+//                                }
+//                            } catch (Exception e) {
+//                            }
+//                            break;
                         case "2":
                             //MATRICULAESPECIALIDAD		
                             try {
-                                Especializacion buscarPorMatricula = EspecializacionFacade.getInstance().buscarPorMatriculaEspecialidad(dato);
+                                Especializacion buscarPorMatricula = EspecializacionFacade.getInstance().buscarPorMatriculaEspecialidad(Integer.parseInt(dato));
+
                                 if (!dato.contains("NULL")) {
                                     recertificacion.setEspecializacion(buscarPorMatricula);
                                 }

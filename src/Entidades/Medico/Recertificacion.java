@@ -6,13 +6,14 @@
 package Entidades.Medico;
 
 import Entidades.Pago.Cuenta;
-import Entidades.Usuario.Usuario;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,15 +24,16 @@ import javax.persistence.Temporal;
  */
 @Entity
 @Table(name = "recertificacion")
+@NamedQueries({
+    @NamedQuery(name = "Recertificacion.cantidadVigente",
+            query = "SELECT count(r.especializacion.especialidad),r.especializacion.especialidad.descripcion FROM Recertificacion r where r.fechaVencimiento > :today group by r.especializacion.especialidad ORDER by count(r.especializacion.especialidad) desc")
+})
 public class Recertificacion implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
-    private Medico medico;
-    @OneToOne
-    private Cuenta cuenta;
     @OneToOne
     private Especializacion especializacion;
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -43,7 +45,6 @@ public class Recertificacion implements Serializable {
     private String observaciones;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaVencimiento;
-    
 
     public Long getId() {
         return id;
@@ -52,23 +53,6 @@ public class Recertificacion implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Medico getMedico() {
-        return medico;
-    }
-
-    public void setMedico(Medico medico) {
-        this.medico = medico;
-    }
-
-    public Cuenta getCuenta() {
-        return cuenta;
-    }
-
-    public void setCuenta(Cuenta cuenta) {
-        this.cuenta = cuenta;
-    }
-
     public Especializacion getEspecializacion() {
         return especializacion;
     }
@@ -132,7 +116,7 @@ public class Recertificacion implements Serializable {
     public void setFechaVencimiento(Date fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -155,7 +139,13 @@ public class Recertificacion implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Medico.Recertificacion[ id=" + id + " ]";
+        try {
+            return especializacion.getMedico().getPersona().getApellido() + ", "
+                    + especializacion.getMedico().getPersona().getNombre() + " - "
+                    + especializacion.getEspecialidad().getNombreEspecialidad();
+        } catch (Exception e) {
+            return "";
+        }
     }
-    
+
 }

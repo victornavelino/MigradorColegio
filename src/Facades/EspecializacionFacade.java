@@ -90,7 +90,7 @@ public class EspecializacionFacade {
         return qu.getResultList();
     }
 
-    public Especializacion buscarPorMatriculaEspecialidad(String descripcion) {
+    public Especializacion buscarPorMatriculaEspecialidad(int descripcion) {
         EntityManager em = emf.createEntityManager();
         Query qu = em.createQuery("SELECT s FROM Especializacion s WHERE s.matriculaEspecialidad = :descripcion");
         qu.setParameter("descripcion", descripcion);
