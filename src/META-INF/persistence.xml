@@ -39,6 +39,7 @@
     <class>Entidades.Caja.TipoDeIngreso</class>
     <class>Entidades.Reporte.Parametro</class>
     <class>Entidades.Reporte.ReporteGenerico</class>
+    <class>Entidades.Base.Archivo</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/colegio"/>
       <property name="javax.persistence.jdbc.password" value=""/>
