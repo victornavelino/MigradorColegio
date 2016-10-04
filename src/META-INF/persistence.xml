@@ -42,6 +42,7 @@
     <class>Entidades.Base.Archivo</class>
     <class>Entidades.Pago.PlanPago</class>
     <class>Entidades.Pago.TipoPlanPago</class>
+    <class>Entidades.Pago.CuotaPlanPago</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/colegio"/>
       <property name="javax.persistence.jdbc.password" value=""/>
