@@ -7,23 +7,26 @@ package migradorcolegiomedico;
 
 import Controladores.BancoJpaController;
 import Controladores.CuentaJpaController;
-import Controladores.DocumentoIdentidadJpaController;
 import Controladores.EspecialidadJpaController;
 import Controladores.EspecializacionJpaController;
 import Controladores.EstadoCivilJpaController;
-import Controladores.FacultadJpaController;
+import Controladores.OrganismoJpaController;
 import Controladores.PagoJpaController;
 import Controladores.RecertificacionJpaController;
 import Controladores.SexoJpaController;
+import Controladores.TipoDeEgresoJpaController;
+import Controladores.TipoDeIngresoJpaController;
 import Controladores.TipoDocumentoJpaController;
 import Controladores.TipoMedicoJpaController;
 import Controladores.TipoTelefonoJpaController;
 import Controladores.UnidadFormadoraJpaController;
 import Controladores.UsuarioJpaController;
+import Entidades.Caja.TipoDeEgreso;
+import Entidades.Caja.TipoDeIngreso;
 import Entidades.Medico.Especialidad;
 import Entidades.Medico.Especializacion;
-import Entidades.Medico.Facultad;
 import Entidades.Medico.Medico;
+import Entidades.Medico.Organismo;
 import Entidades.Medico.Recertificacion;
 import Entidades.Medico.TipoMedico;
 import Entidades.Medico.UnidadFormadora;
@@ -38,9 +41,9 @@ import Entidades.Persona.EstadoCivil;
 import Entidades.Persona.Persona;
 import Entidades.Persona.Sexo;
 import Entidades.Persona.Telefono;
+import Entidades.Persona.TipoDocumento;
 import Entidades.Persona.TipoTelefono;
 import Entidades.Usuario.Usuario;
-import Facades.EspecialidadFacade;
 import Facades.EspecializacionFacade;
 import Facades.MedicoFacade;
 import java.io.File;
@@ -60,7 +63,6 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import jxl.*;
 import jxl.read.biff.BiffException;
 
@@ -77,11 +79,15 @@ public class ImportarExcelMedicos {
         System.out.println("Importador de Archivos:");
         ImportarExcelMedicos excel = new ImportarExcelMedicos();
         excel.crearUsuario();
+        excel.crearOrganismo();
         excel.crearSexo();
         excel.crearTipoTelefono();
         excel.crearBanco();
         excel.crearCuenta();
         excel.crearTipoMedico();
+        excel.crearTipoEgreso();
+        excel.crearTipoIngreso();
+        excel.crearTipoDocumento();
         excel.importar();//LEGAJOMEDICO.xls --> MEDICOS
     }
 
@@ -1212,4 +1218,109 @@ public class ImportarExcelMedicos {
         }
     }
 
+    private void crearOrganismo() {
+        Organismo organismo = new OrganismoJpaController(emf).findOrganismo(1L);
+        if (organismo == null) {
+            organismo = new Organismo();
+            organismo.setId(1L);
+            organismo.setDescripcion("COLEGIO MEDICO");
+            new OrganismoJpaController(emf).create(organismo);
+
+        }
+        organismo = new OrganismoJpaController(emf).findOrganismo(2L);
+        if (organismo == null) {
+            organismo = new Organismo();
+            organismo.setId(2L);
+            organismo.setDescripcion("CIRCULO MEDICO");
+            new OrganismoJpaController(emf).create(organismo);
+        }
+        organismo = new OrganismoJpaController(emf).findOrganismo(3L);
+        if (organismo == null) {
+            organismo = new Organismo();
+            organismo.setId(3L);
+            organismo.setDescripcion("ECA");
+            new OrganismoJpaController(emf).create(organismo);
+        }
+        organismo = new OrganismoJpaController(emf).findOrganismo(4L);
+        if (organismo == null) {
+            organismo = new Organismo();
+            organismo.setId(4L);
+            organismo.setDescripcion("DESCUENTO POR PLANILLA");
+            new OrganismoJpaController(emf).create(organismo);
+        }
+    }
+
+    private void crearTipoIngreso() {
+        TipoDeIngreso tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(1L);
+        if (tdi == null) {
+            tdi = new TipoDeIngreso();
+            tdi.setId(1L);
+            tdi.setDescripcion("PAGO");
+            new TipoDeIngresoJpaController(emf).create(tdi);
+        }
+        tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(2L);
+        if (tdi == null) {
+            tdi = new TipoDeIngreso();
+            tdi.setId(2L);
+            tdi.setDescripcion("PLAN DE PAGO");
+            new TipoDeIngresoJpaController(emf).create(tdi);
+        }
+        tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(3L);
+        if (tdi == null) {
+            tdi = new TipoDeIngreso();
+            tdi.setId(3L);
+            tdi.setDescripcion("MATRICULA");
+            new TipoDeIngresoJpaController(emf).create(tdi);
+        }
+        tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(4L);
+        if (tdi == null) {
+            tdi = new TipoDeIngreso();
+            tdi.setId(4L);
+            tdi.setDescripcion("RECERTIFICACION");
+            new TipoDeIngresoJpaController(emf).create(tdi);
+        }
+        tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(5L);
+        if (tdi == null) {
+            tdi = new TipoDeIngreso();
+            tdi.setId(5L);
+            tdi.setDescripcion("MATRICULA");
+            new TipoDeIngresoJpaController(emf).create(tdi);
+        }
+        tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(6L);
+        if (tdi == null) {
+            tdi = new TipoDeIngreso();
+            tdi.setId(6L);
+            tdi.setDescripcion("OTRO");
+            new TipoDeIngresoJpaController(emf).create(tdi);
+        }
+    }
+
+    private void crearTipoEgreso() {
+        TipoDeEgreso tde = new TipoDeEgresoJpaController(emf).findTipoDeEgreso(1L);
+        if (tde == null) {
+            tde = new TipoDeEgreso();
+            tde.setId(1L);
+            tde.setDescripcion("BANCO");
+            new TipoDeEgresoJpaController(emf).create(tde);
+        }
+        tde = new TipoDeEgresoJpaController(emf).findTipoDeEgreso(2L);
+        if (tde == null) {
+            tde = new TipoDeEgreso();
+            tde.setId(2L);
+            tde.setDescripcion("OTRO");
+            new TipoDeEgresoJpaController(emf).create(tde);
+        }
+
+    }
+
+    private void crearTipoDocumento() {
+        TipoDocumento td = new TipoDocumentoJpaController(emf).findTipoDocumento(1L);
+        if (td == null) {
+            td = new TipoDocumento();
+            td.setId(1L);
+            td.setDescripcion("DNI");
+            new TipoDocumentoJpaController(emf).create(td);
+        }
+
+    }
 }
