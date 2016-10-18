@@ -1255,7 +1255,7 @@ public class ImportarExcelMedicos {
         if (tdi == null) {
             tdi = new TipoDeIngreso();
             tdi.setId(1L);
-            tdi.setDescripcion("PAGO");
+            tdi.setDescripcion("PAGO MATRICULA");
             new TipoDeIngresoJpaController(emf).create(tdi);
         }
         tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(2L);
@@ -1269,27 +1269,13 @@ public class ImportarExcelMedicos {
         if (tdi == null) {
             tdi = new TipoDeIngreso();
             tdi.setId(3L);
-            tdi.setDescripcion("MATRICULA");
+            tdi.setDescripcion("RECERTIFICACION");
             new TipoDeIngresoJpaController(emf).create(tdi);
         }
         tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(4L);
         if (tdi == null) {
             tdi = new TipoDeIngreso();
             tdi.setId(4L);
-            tdi.setDescripcion("RECERTIFICACION");
-            new TipoDeIngresoJpaController(emf).create(tdi);
-        }
-        tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(5L);
-        if (tdi == null) {
-            tdi = new TipoDeIngreso();
-            tdi.setId(5L);
-            tdi.setDescripcion("MATRICULA");
-            new TipoDeIngresoJpaController(emf).create(tdi);
-        }
-        tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(6L);
-        if (tdi == null) {
-            tdi = new TipoDeIngreso();
-            tdi.setId(6L);
             tdi.setDescripcion("OTRO");
             new TipoDeIngresoJpaController(emf).create(tdi);
         }
