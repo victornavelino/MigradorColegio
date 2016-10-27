@@ -1255,7 +1255,7 @@ public class ImportarExcelMedicos {
         if (tdi == null) {
             tdi = new TipoDeIngreso();
             tdi.setId(1L);
-            tdi.setDescripcion("PAGO MATRICULA");
+            tdi.setDescripcion("MATRICULA");
             new TipoDeIngresoJpaController(emf).create(tdi);
         }
         tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(2L);
@@ -1276,7 +1276,21 @@ public class ImportarExcelMedicos {
         if (tdi == null) {
             tdi = new TipoDeIngreso();
             tdi.setId(4L);
-            tdi.setDescripcion("OTRO");
+            tdi.setDescripcion("ESPECIALIZACION");
+            new TipoDeIngresoJpaController(emf).create(tdi);
+        }
+        tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(5L);
+        if (tdi == null) {
+            tdi = new TipoDeIngreso();
+            tdi.setId(5L);
+            tdi.setDescripcion("MANTENIMIENTO");
+            new TipoDeIngresoJpaController(emf).create(tdi);
+        }
+        tdi = new TipoDeIngresoJpaController(emf).findTipoDeIngreso(6L);
+        if (tdi == null) {
+            tdi = new TipoDeIngreso();
+            tdi.setId(6L);
+            tdi.setDescripcion("OTROS");
             new TipoDeIngresoJpaController(emf).create(tdi);
         }
     }
@@ -1286,17 +1300,51 @@ public class ImportarExcelMedicos {
         if (tde == null) {
             tde = new TipoDeEgreso();
             tde.setId(1L);
-            tde.setDescripcion("BANCO");
+            tde.setDescripcion("CHEQUES");
             new TipoDeEgresoJpaController(emf).create(tde);
         }
         tde = new TipoDeEgresoJpaController(emf).findTipoDeEgreso(2L);
         if (tde == null) {
             tde = new TipoDeEgreso();
             tde.setId(2L);
-            tde.setDescripcion("OTRO");
+            tde.setDescripcion("BANCOS");
             new TipoDeEgresoJpaController(emf).create(tde);
         }
-
+        tde = new TipoDeEgresoJpaController(emf).findTipoDeEgreso(3L);
+        if (tde == null) {
+            tde = new TipoDeEgreso();
+            tde.setId(3L);
+            tde.setDescripcion("SUELDOS");
+            new TipoDeEgresoJpaController(emf).create(tde);
+        }
+        tde = new TipoDeEgresoJpaController(emf).findTipoDeEgreso(4L);
+        if (tde == null) {
+            tde = new TipoDeEgreso();
+            tde.setId(4L);
+            tde.setDescripcion("REFRIGERIOS");
+            new TipoDeEgresoJpaController(emf).create(tde);
+        }
+        tde = new TipoDeEgresoJpaController(emf).findTipoDeEgreso(5L);
+        if (tde == null) {
+            tde = new TipoDeEgreso();
+            tde.setId(5L);
+            tde.setDescripcion("REFRIGERIOS");
+            new TipoDeEgresoJpaController(emf).create(tde);
+        }
+        tde = new TipoDeEgresoJpaController(emf).findTipoDeEgreso(6L);
+        if (tde == null) {
+            tde = new TipoDeEgreso();
+            tde.setId(6L);
+            tde.setDescripcion("TELEFONO");
+            new TipoDeEgresoJpaController(emf).create(tde);
+        }
+        tde = new TipoDeEgresoJpaController(emf).findTipoDeEgreso(7L);
+        if (tde == null) {
+            tde = new TipoDeEgreso();
+            tde.setId(7L);
+            tde.setDescripcion("OTROS");
+            new TipoDeEgresoJpaController(emf).create(tde);
+        }
     }
 
     private void crearTipoDocumento() {
