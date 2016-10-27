@@ -552,7 +552,9 @@ public class ImportarExcelMedicos {
 
                     }
                 }
-                new EspecializacionJpaController(emf).create(especializacion);
+                if (especializacion.getEspecialidad() != null && especializacion.getEspecialidad().getId() != null) {
+                    new EspecializacionJpaController(emf).create(especializacion);
+                }
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ImportarExcelMedicos.class.getName()).log(Level.SEVERE, null, ex);
