@@ -31,6 +31,16 @@ public class Cuenta implements Serializable {
     private BigDecimal importe;
     private Boolean habilitada;
 
+    public Cuenta(Long id, String descripcion, BigDecimal importe, Boolean habilitada) {
+        this.id = id;
+        this.descripcion = descripcion;
+        this.importe = importe;
+        this.habilitada = habilitada;
+    }
+
+    public Cuenta() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -81,16 +91,6 @@ public class Cuenta implements Serializable {
             return false;
         }
         return true;
-    }
-
-    public Cuenta() {
-    }
-
-    public Cuenta(Long id, String descripcion, BigDecimal importe, Boolean habilitada) {
-        this.id = id;
-        this.descripcion = descripcion;
-        this.importe = importe;
-        this.habilitada = habilitada;
     }
 
     @Override

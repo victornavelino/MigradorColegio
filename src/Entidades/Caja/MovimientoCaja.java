@@ -17,6 +17,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -28,6 +30,11 @@ import javax.persistence.Temporal;
 @Entity
 @Table(name = "caja_movimientocaja")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@NamedQueries({
+    @NamedQuery(name = "MovimientoCaja.getAbiertos",
+            query = "SELECT e FROM MovimientoCaja e WHERE  e.cerrado = False "
+            + " ORDER BY e.id DESC")
+})
 public class MovimientoCaja implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -112,6 +119,24 @@ public class MovimientoCaja implements Serializable {
         this.cerrado = cerrado;
     }
 
+    public String getClase() {
+        return this.getClass().getSimpleName();
+    }
+
+    public String getTipoMovimiento() {
+        try {
+            switch (getClase()) {
+                case "Ingreso":
+                    return ((Ingreso) this).getTipo().getDescripcion();
+                case "Egreso":
+                    return ((Egreso) this).getTipo().getDescripcion();
+            }
+        } catch (Exception e) {
+            return "";
+        }
+        return "";
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -134,7 +159,7 @@ public class MovimientoCaja implements Serializable {
 
     @Override
     public String toString() {
-        return "entidades.caja.Caja[ id=" + id + " ]";
+        return descripcion;
     }
 
 }

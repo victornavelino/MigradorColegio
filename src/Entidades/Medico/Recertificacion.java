@@ -5,7 +5,6 @@
  */
 package Entidades.Medico;
 
-import Entidades.Pago.Cuenta;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
@@ -53,6 +52,7 @@ public class Recertificacion implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     public Especializacion getEspecializacion() {
         return especializacion;
     }
