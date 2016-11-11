@@ -616,8 +616,9 @@ public class ImportarExcelMedicosNew {
                                     if ("0".equals(dato)) {
                                         dato = "7";
 
-                                        unidadFormadora = new UnidadFormadoraJpaController(emf).findUnidadFormadora(Long.parseLong(dato)); //TODO aca hay que validar por nombre
                                     }
+                                    unidadFormadora = new UnidadFormadoraJpaController(emf).findUnidadFormadora(Long.parseLong(dato)); //TODO aca hay que validar por nombre
+
                                 }
                             } catch (NumberFormatException numberFormatException) {
                             }
