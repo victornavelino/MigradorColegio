@@ -19,6 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tipomedico")
 public class TipoMedico implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +28,7 @@ public class TipoMedico implements Serializable {
     private boolean factura;
     private boolean generalistado;
     private String observaciones;
+
     public Long getId() {
         return id;
     }
@@ -66,7 +68,7 @@ public class TipoMedico implements Serializable {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -90,7 +92,6 @@ public class TipoMedico implements Serializable {
     public TipoMedico() {
     }
 
-    
     public TipoMedico(Long id, String descripcion, boolean factura, boolean generalistado, String observaciones) {
         this.id = id;
         this.descripcion = descripcion.toUpperCase();
@@ -103,5 +104,5 @@ public class TipoMedico implements Serializable {
     public String toString() {
         return "Entidades.Medico.TipoMedico[ id=" + id + " ]";
     }
-    
+
 }
