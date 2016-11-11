@@ -534,9 +534,9 @@ public class ImportarExcelMedicosNew {
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
                 Especializacion especializacion = new Especializacion();
-                Especialidad especialidad = new Especialidad();
-                UnidadFormadora unidadFormadora = new UnidadFormadora();
-                Medico medico = new Medico();
+                Especialidad especialidad = null;
+                UnidadFormadora unidadFormadora = null;
+                Medico medico;
                 boolean guarda = false;
 
                 for (int columna = 0; columna < sheet.getColumns(); columna++) { // Recorre  cada columna
@@ -546,8 +546,10 @@ public class ImportarExcelMedicosNew {
                         case "0":
                             //Matricula
                             try {
-                                medico = MedicoFacade.getInstance().buscarPorMatricula(Integer.parseInt(dato));
-                                especializacion.setMedico(medico);
+                                if (!dato.contains("NULL") && !dato.isEmpty()) {
+                                    medico = MedicoFacade.getInstance().buscarPorMatricula(Integer.parseInt(dato));
+                                    especializacion.setMedico(medico);
+                                }
                             } catch (Exception e) {
                             }
                             break;
@@ -566,14 +568,14 @@ public class ImportarExcelMedicosNew {
 
                             } catch (Exception e) {
                             }
-                            if (!dato.contains("NULL")) {
+                            if (!dato.contains("NULL") && !dato.isEmpty()) {
                                 especializacion.setEspecialidad(especialidad);
                             }
                             break;
                         case "3":
                             //MATRICULAESPECIALIDAD
                             try {
-                                if (!dato.contains("NULL")) {
+                                if (!dato.contains("NULL") && !dato.isEmpty()) {
                                     especializacion.setMatriculaEspecialidad(Integer.parseInt(dato));
                                 }
                             } catch (Exception e) {
@@ -582,7 +584,7 @@ public class ImportarExcelMedicosNew {
                         case "4":
                             //FECHAMATRICULACION
                             try {
-                                if (!dato.contains("NULL")) {
+                                if (!dato.contains("NULL") && !dato.isEmpty()) {
 
                                     especializacion.setFechaMatriculacion(formatoFecha.parse(dato));
                                 }
@@ -592,7 +594,7 @@ public class ImportarExcelMedicosNew {
                         case "5":
                             //LIBRO	
                             try {
-                                if (!dato.contains("NULL")) {
+                                if (!dato.contains("NULL") && !dato.isEmpty()) {
                                     especializacion.setLibro(dato);
                                 }
                             } catch (Exception e) {
@@ -601,7 +603,7 @@ public class ImportarExcelMedicosNew {
                         case "6":
                             //FOLIO
                             try {
-                                if (!dato.contains("NULL")) {
+                                if (!dato.contains("NULL") && !dato.isEmpty()) {
                                     especializacion.setFolio(dato);
                                 }
                             } catch (Exception e) {
@@ -610,7 +612,7 @@ public class ImportarExcelMedicosNew {
                         case "7":
                             //	UNIVERSIDAD
                             try {
-                                if (!dato.contains("NULL")) {
+                                if (!dato.contains("NULL") && !dato.isEmpty()) {
                                     if ("0".equals(dato)) {
                                         dato = "7";
                                     }
@@ -620,7 +622,7 @@ public class ImportarExcelMedicosNew {
                             } catch (NumberFormatException numberFormatException) {
                             }
                             try {
-                                if (!dato.contains("NULL")) {
+                                if (!dato.contains("NULL") && !dato.isEmpty()) {
                                     especializacion.setUnidadFormadora(unidadFormadora);
                                 }
                             } catch (Exception e) {
