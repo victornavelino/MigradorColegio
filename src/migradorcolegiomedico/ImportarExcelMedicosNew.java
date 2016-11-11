@@ -530,7 +530,7 @@ public class ImportarExcelMedicosNew {
             WorkbookSettings ws = new WorkbookSettings();
             ws.setEncoding("Cp1252");
             Workbook workbook = Workbook.getWorkbook(in, ws);
-            Sheet sheet = workbook.getSheet(15);
+            Sheet sheet = workbook.getSheet(13);
             String dato;
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
