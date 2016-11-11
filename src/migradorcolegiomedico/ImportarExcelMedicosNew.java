@@ -245,7 +245,7 @@ public class ImportarExcelMedicosNew {
                             break;
                         case "6":
                             try {
-                                medico.getPersona().getDocumentoIdentidad().setNumero(Long.parseLong(dato));
+                                medico.getPersona().getDocumentoIdentidad().setNumero(Long.parseLong(dato.replace(".", "")));
                             } catch (NumberFormatException numberFormatException) {
                             }
                             break;
@@ -562,7 +562,7 @@ public class ImportarExcelMedicosNew {
                         case "2":
                             //ESPECIALIDAD	
                             try {
-                                if (!dato.contains("NULL") && !dato.isEmpty()) {
+                                if (!dato.contains("NULL") && !dato.isEmpty() && !dato.contains("0")) {
                                     especialidad = EspecialidadFacade.getInstance().buscarPorCodigo(Long.parseLong(dato));
                                     guarda = true;
                                 }
@@ -912,7 +912,7 @@ public class ImportarExcelMedicosNew {
             WorkbookSettings ws = new WorkbookSettings();
             ws.setEncoding("Cp1252");
             Workbook workbook = Workbook.getWorkbook(in, ws);
-            Sheet sheet = workbook.getSheet(30);
+            Sheet sheet = workbook.getSheet(29);
             String dato;
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
