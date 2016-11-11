@@ -50,6 +50,7 @@ import Entidades.Persona.Telefono;
 import Entidades.Persona.TipoDocumento;
 import Entidades.Persona.TipoTelefono;
 import Entidades.Usuario.Usuario;
+import Facades.EspecialidadFacade;
 import Facades.EspecializacionFacade;
 import Facades.MedicoFacade;
 import java.io.File;
@@ -562,7 +563,7 @@ public class ImportarExcelMedicosNew {
                             //ESPECIALIDAD	
                             try {
                                 if (!dato.contains("NULL") && !dato.isEmpty()) {
-                                    especialidad = new EspecialidadJpaController(emf).findEspecialidad(Long.parseLong(dato));
+                                    especialidad = EspecialidadFacade.getInstance().buscarPorCodigo(Long.parseLong(dato));
                                     guarda = true;
                                 }
 
@@ -673,12 +674,15 @@ public class ImportarExcelMedicosNew {
                 Especialidad especialidad = new Especialidad();
                 for (int columna = 0; columna < sheet.getColumns(); columna++) { // Recorre  cada fila
                     dato = sheet.getCell(columna, fila).getContents();
+                    Cell cell = sheet.getCell(columna, fila);
                     //declar clases comunes
                     switch (String.valueOf(columna)) {
                         case "0":
                             //ID	
                             try {
-                                especialidad.setId(Long.parseLong(dato));
+                                NumberCell numberCell = (NumberCell) cell;
+                                double d = numberCell.getValue();
+                                especialidad.setCodigoEspecilidad((long) d);
                             } catch (NumberFormatException numberFormatException) {
                             }
                             break;

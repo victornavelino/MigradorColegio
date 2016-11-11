@@ -100,8 +100,8 @@ public class EspecialidadFacade {
             return null;
         }
     }
-    
-     public List<Especialidad> buscarPorNombre(String nombre) {
+
+    public List<Especialidad> buscarPorNombre(String nombre) {
         EntityManager em = emf.createEntityManager();
         Query qu = em.createQuery("SELECT s FROM Especialidad s WHERE s.nombreEspecialidad LIKE :nombre");
         qu.setParameter("nombre", "%" + nombre.toUpperCase() + "%");
@@ -112,6 +112,18 @@ public class EspecialidadFacade {
         EntityManager em = emf.createEntityManager();
         Query qu = em.createQuery("SELECT s FROM Especialidad s WHERE s.nombreEspecialidad LIKE :nombre");
         qu.setParameter("nombre", nombre);
+        qu.setMaxResults(0);
+        try {
+            return (Especialidad) qu.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Especialidad buscarPorCodigo(Long codigo) {
+        EntityManager em = emf.createEntityManager();
+        Query qu = em.createQuery("SELECT s FROM Especialidad s WHERE s.codigoEspecilidad = :codigo");
+        qu.setParameter("codigo", codigo);
         qu.setMaxResults(0);
         try {
             return (Especialidad) qu.getSingleResult();

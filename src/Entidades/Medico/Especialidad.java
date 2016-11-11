@@ -20,27 +20,38 @@ import javax.persistence.Table;
  * @author nago
  */
 @Entity
-@Table(name="medico_especialidad")
+@Table(name = "medico_especialidad")
 @NamedQueries({
     @NamedQuery(name = "Especialidad.buscar",
             query = "SELECT e FROM Especialidad e WHERE e.nombreEspecialidad LIKE :especialidad "
             + " ORDER BY e.id DESC")
 })
 public class Especialidad implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombreEspecialidad;
     private String descripcion;
+    private Long codigoEspecilidad;
     @OneToOne
     private TipoEspecialidad tipoEspecialidad;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCodigoEspecilidad() {
+        return codigoEspecilidad;
+    }
+
+    public void setCodigoEspecilidad(Long codigoEspecilidad) {
+        this.codigoEspecilidad = codigoEspecilidad;
     }
 
     public String getDescripcion() {
@@ -66,7 +77,7 @@ public class Especialidad implements Serializable {
     public void setTipoEspecialidad(TipoEspecialidad tipoEspecialidad) {
         this.tipoEspecialidad = tipoEspecialidad;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -91,5 +102,5 @@ public class Especialidad implements Serializable {
     public String toString() {
         return nombreEspecialidad;
     }
-    
+
 }
