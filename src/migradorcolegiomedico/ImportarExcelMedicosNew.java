@@ -245,7 +245,7 @@ public class ImportarExcelMedicosNew {
                             break;
                         case "6":
                             try {
-                                medico.getPersona().getDocumentoIdentidad().setNumero(Long.parseLong(dato.replace(".", "")));
+                                medico.getPersona().getDocumentoIdentidad().setNumero(Long.parseLong(dato.replace(".", "").replace("'", "")));
                             } catch (NumberFormatException numberFormatException) {
                             }
                             break;
@@ -562,7 +562,7 @@ public class ImportarExcelMedicosNew {
                         case "2":
                             //ESPECIALIDAD	
                             try {
-                                if (!dato.contains("NULL") && !dato.isEmpty() && !dato.contains("0")) {
+                                if (!dato.contains("NULL") && !dato.isEmpty() && !"0".equals(dato)) {
                                     especialidad = EspecialidadFacade.getInstance().buscarPorCodigo(Long.parseLong(dato));
                                     guarda = true;
                                 }
@@ -576,8 +576,11 @@ public class ImportarExcelMedicosNew {
                         case "3":
                             //MATRICULAESPECIALIDAD
                             try {
-                                if (!dato.contains("NULL") && !dato.isEmpty()) {
+                                if (!dato.contains("NULL") && !dato.isEmpty() && !"0".equals(dato)) {
                                     especializacion.setMatriculaEspecialidad(Integer.parseInt(dato));
+                                    guarda = true;
+                                } else {
+                                    guarda = false;
                                 }
                             } catch (Exception e) {
                             }
