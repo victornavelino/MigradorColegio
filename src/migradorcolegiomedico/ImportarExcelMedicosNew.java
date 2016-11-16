@@ -661,6 +661,7 @@ public class ImportarExcelMedicosNew {
         try {
             System.out.println("Importando Especialidad  ...");
             String ruta = fileChooser.getSelectedFile().getAbsolutePath() + File.separator + archivo;
+            System.out.println("rutaa: "+ruta);
             File selectedFile = new File(ruta);
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
             boolean flag = true;

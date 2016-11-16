@@ -61,16 +61,44 @@ public class Medico implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaBaja;
     private String motivoBaja;
+    private String resolucionBaja;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date fechaResolucionBaja;
     @OneToOne
     private Organismo organismo;
     private Integer libro;
     private Integer folio;
+    private String nroRegistro;
     @OneToOne(cascade = CascadeType.ALL)
     private Archivo archivo;
     @OneToMany(mappedBy = "medico")
     private List<PlanPago> planPagos;
     @OneToMany(mappedBy = "medico")
     private List<Pago> pagos;
+
+    public String getResolucionBaja() {
+        return resolucionBaja;
+    }
+
+    public void setResolucionBaja(String resolucionBaja) {
+        this.resolucionBaja = resolucionBaja;
+    }
+
+    public Date getFechaResolucionBaja() {
+        return fechaResolucionBaja;
+    }
+
+    public void setFechaResolucionBaja(Date fechaResolucionBaja) {
+        this.fechaResolucionBaja = fechaResolucionBaja;
+    }
+
+    public String getNroRegistro() {
+        return nroRegistro;
+    }
+
+    public void setNroRegistro(String nroRegistro) {
+        this.nroRegistro = nroRegistro;
+    }
 
     public Archivo getArchivo() {
         return archivo;

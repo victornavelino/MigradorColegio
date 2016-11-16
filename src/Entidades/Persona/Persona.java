@@ -5,6 +5,7 @@
  */
 package Entidades.Persona;
 
+import Entidades.Localidad.Localidad;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +45,8 @@ public class Persona implements Serializable {
     private Date fechaNacimiento;
     @Embedded
     private Domicilio domicilio;
+    @OneToOne
+    private Localidad lugarNacimiento;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Telefono> telefonos;
     @OneToMany(cascade = CascadeType.ALL)
@@ -54,6 +57,14 @@ public class Persona implements Serializable {
     @OneToOne
     private EstadoCivil estadoCivil;
 
+    public Localidad getLugarNacimiento() {
+        return lugarNacimiento;
+    }
+
+    public void setLugarNacimiento(Localidad lugarNacimiento) {
+        this.lugarNacimiento = lugarNacimiento;
+    }
+    
     public Long getId() {
         return id;
     }
