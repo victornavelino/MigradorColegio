@@ -245,7 +245,9 @@ public class ImportarExcelMedicosNew {
                             break;
                         case "6":
                             try {
-                                medico.getPersona().getDocumentoIdentidad().setNumero(Long.parseLong(dato.replace(".", "").replace("'", "")));
+                                String replace = dato.replace(".", "").replace("'", "");
+                                long parseLong = Long.parseLong(replace);
+                                medico.getPersona().getDocumentoIdentidad().setNumero(parseLong);
                             } catch (NumberFormatException numberFormatException) {
                             }
                             break;
