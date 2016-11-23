@@ -22,6 +22,7 @@ import javax.persistence.Table;
  */
 @Embeddable
 public class Domicilio implements Serializable {
+
     private String calle;
     private String numero;
     private String piso;
@@ -33,7 +34,8 @@ public class Domicilio implements Serializable {
     private String barrio;
     private String codigoPostal;
 
-  
+ 
+
     public String getCodigoPostal() {
         return codigoPostal;
     }
@@ -109,10 +111,6 @@ public class Domicilio implements Serializable {
     public void setBarrio(String barrio) {
         this.barrio = barrio;
     }
-
-   
-
-  
 
     @Override
     public String toString() {
