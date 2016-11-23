@@ -70,6 +70,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import jxl.*;
 import jxl.read.biff.BiffException;
 
@@ -86,23 +87,32 @@ public class ImportarExcelMedicosNew {
     public static void main(String arg[]) {
         System.out.println("Importador de Archivos:");
         ImportarExcelMedicosNew excel = new ImportarExcelMedicosNew();
-        excel.crearUsuario();
-        excel.crearOrganismo();
-        excel.crearSexo();
-        excel.crearTipoTelefono();
-        excel.crearBanco();
-        excel.crearCuenta();
-        excel.crearTipoMedico();
-        excel.crearTipoEgreso();
-        excel.crearTipoIngreso();
-        excel.crearTipoDocumento();
-        excel.crearEstadosCiviles();
-        excel.crearProvincias();
-        excel.crearDepartamentos();
-        excel.crearLocalidades();
-        excel.crearUniversidades();
-        excel.importar();//LEGAJOMEDICO.xls --> MEDICOS
-    }
+        int reply = JOptionPane.showConfirmDialog(null, "¿Es una migración desde cero?", "Importador", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+            excel.crearUsuario();
+            excel.crearOrganismo();
+            excel.crearSexo();
+            excel.crearTipoTelefono();
+            excel.crearBanco();
+            excel.crearCuenta();
+            excel.crearTipoMedico();
+            excel.crearTipoEgreso();
+            excel.crearTipoIngreso();
+            excel.crearTipoDocumento();
+            excel.crearEstadosCiviles();
+            excel.crearProvincias();
+            excel.crearDepartamentos();
+            excel.crearLocalidades();
+            excel.crearUniversidades();
+            excel.importar();//LEGAJOMEDICO.xls --> MEDICOS        }
+        }   else {
+           JOptionPane.showMessageDialog(null, "GOODBYE");
+           System.exit(0);
+        }
+
+        }
+
+    
 
     private void crearSexo() {
         Sexo sexo = new SexoJpaController(emf).findSexo(1L);
@@ -663,7 +673,7 @@ public class ImportarExcelMedicosNew {
         try {
             System.out.println("Importando Especialidad  ...");
             String ruta = fileChooser.getSelectedFile().getAbsolutePath() + File.separator + archivo;
-            System.out.println("rutaa: "+ruta);
+            System.out.println("rutaa: " + ruta);
             File selectedFile = new File(ruta);
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
             boolean flag = true;
