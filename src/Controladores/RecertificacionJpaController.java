@@ -6,19 +6,20 @@
 package Controladores;
 
 import Controladores.exceptions.NonexistentEntityException;
-import Entidades.Medico.Recertificacion;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import Entidades.Medico.Especializacion;
+import Entidades.Medico.Recertificacion;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author hugo
+ * @author franco
  */
 public class RecertificacionJpaController implements Serializable {
 
@@ -36,7 +37,16 @@ public class RecertificacionJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Especializacion especializacion = recertificacion.getEspecializacion();
+            if (especializacion != null) {
+                especializacion = em.getReference(especializacion.getClass(), especializacion.getId());
+                recertificacion.setEspecializacion(especializacion);
+            }
             em.persist(recertificacion);
+            if (especializacion != null) {
+                especializacion.getRecertificaciones().add(recertificacion);
+                especializacion = em.merge(especializacion);
+            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -50,7 +60,22 @@ public class RecertificacionJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Recertificacion persistentRecertificacion = em.find(Recertificacion.class, recertificacion.getId());
+            Especializacion especializacionOld = persistentRecertificacion.getEspecializacion();
+            Especializacion especializacionNew = recertificacion.getEspecializacion();
+            if (especializacionNew != null) {
+                especializacionNew = em.getReference(especializacionNew.getClass(), especializacionNew.getId());
+                recertificacion.setEspecializacion(especializacionNew);
+            }
             recertificacion = em.merge(recertificacion);
+            if (especializacionOld != null && !especializacionOld.equals(especializacionNew)) {
+                especializacionOld.getRecertificaciones().remove(recertificacion);
+                especializacionOld = em.merge(especializacionOld);
+            }
+            if (especializacionNew != null && !especializacionNew.equals(especializacionOld)) {
+                especializacionNew.getRecertificaciones().add(recertificacion);
+                especializacionNew = em.merge(especializacionNew);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -79,6 +104,11 @@ public class RecertificacionJpaController implements Serializable {
                 recertificacion.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The recertificacion with id " + id + " no longer exists.", enfe);
+            }
+            Especializacion especializacion = recertificacion.getEspecializacion();
+            if (especializacion != null) {
+                especializacion.getRecertificaciones().remove(recertificacion);
+                especializacion = em.merge(especializacion);
             }
             em.remove(recertificacion);
             em.getTransaction().commit();

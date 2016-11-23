@@ -13,6 +13,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Entidades.Medico.Medico;
+import Entidades.Medico.Recertificacion;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,6 +35,9 @@ public class EspecializacionJpaController implements Serializable {
     }
 
     public void create(Especializacion especializacion) {
+        if (especializacion.getRecertificaciones() == null) {
+            especializacion.setRecertificaciones(new ArrayList<Recertificacion>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -42,10 +47,25 @@ public class EspecializacionJpaController implements Serializable {
                 medico = em.getReference(medico.getClass(), medico.getId());
                 especializacion.setMedico(medico);
             }
+            List<Recertificacion> attachedRecertificaciones = new ArrayList<Recertificacion>();
+            for (Recertificacion recertificacionesRecertificacionToAttach : especializacion.getRecertificaciones()) {
+                recertificacionesRecertificacionToAttach = em.getReference(recertificacionesRecertificacionToAttach.getClass(), recertificacionesRecertificacionToAttach.getId());
+                attachedRecertificaciones.add(recertificacionesRecertificacionToAttach);
+            }
+            especializacion.setRecertificaciones(attachedRecertificaciones);
             em.persist(especializacion);
             if (medico != null) {
                 medico.getEspecializaciones().add(especializacion);
                 medico = em.merge(medico);
+            }
+            for (Recertificacion recertificacionesRecertificacion : especializacion.getRecertificaciones()) {
+                Especializacion oldEspecializacionOfRecertificacionesRecertificacion = recertificacionesRecertificacion.getEspecializacion();
+                recertificacionesRecertificacion.setEspecializacion(especializacion);
+                recertificacionesRecertificacion = em.merge(recertificacionesRecertificacion);
+                if (oldEspecializacionOfRecertificacionesRecertificacion != null) {
+                    oldEspecializacionOfRecertificacionesRecertificacion.getRecertificaciones().remove(recertificacionesRecertificacion);
+                    oldEspecializacionOfRecertificacionesRecertificacion = em.merge(oldEspecializacionOfRecertificacionesRecertificacion);
+                }
             }
             em.getTransaction().commit();
         } finally {
@@ -63,10 +83,19 @@ public class EspecializacionJpaController implements Serializable {
             Especializacion persistentEspecializacion = em.find(Especializacion.class, especializacion.getId());
             Medico medicoOld = persistentEspecializacion.getMedico();
             Medico medicoNew = especializacion.getMedico();
+            List<Recertificacion> recertificacionesOld = persistentEspecializacion.getRecertificaciones();
+            List<Recertificacion> recertificacionesNew = especializacion.getRecertificaciones();
             if (medicoNew != null) {
                 medicoNew = em.getReference(medicoNew.getClass(), medicoNew.getId());
                 especializacion.setMedico(medicoNew);
             }
+            List<Recertificacion> attachedRecertificacionesNew = new ArrayList<Recertificacion>();
+            for (Recertificacion recertificacionesNewRecertificacionToAttach : recertificacionesNew) {
+                recertificacionesNewRecertificacionToAttach = em.getReference(recertificacionesNewRecertificacionToAttach.getClass(), recertificacionesNewRecertificacionToAttach.getId());
+                attachedRecertificacionesNew.add(recertificacionesNewRecertificacionToAttach);
+            }
+            recertificacionesNew = attachedRecertificacionesNew;
+            especializacion.setRecertificaciones(recertificacionesNew);
             especializacion = em.merge(especializacion);
             if (medicoOld != null && !medicoOld.equals(medicoNew)) {
                 medicoOld.getEspecializaciones().remove(especializacion);
@@ -75,6 +104,23 @@ public class EspecializacionJpaController implements Serializable {
             if (medicoNew != null && !medicoNew.equals(medicoOld)) {
                 medicoNew.getEspecializaciones().add(especializacion);
                 medicoNew = em.merge(medicoNew);
+            }
+            for (Recertificacion recertificacionesOldRecertificacion : recertificacionesOld) {
+                if (!recertificacionesNew.contains(recertificacionesOldRecertificacion)) {
+                    recertificacionesOldRecertificacion.setEspecializacion(null);
+                    recertificacionesOldRecertificacion = em.merge(recertificacionesOldRecertificacion);
+                }
+            }
+            for (Recertificacion recertificacionesNewRecertificacion : recertificacionesNew) {
+                if (!recertificacionesOld.contains(recertificacionesNewRecertificacion)) {
+                    Especializacion oldEspecializacionOfRecertificacionesNewRecertificacion = recertificacionesNewRecertificacion.getEspecializacion();
+                    recertificacionesNewRecertificacion.setEspecializacion(especializacion);
+                    recertificacionesNewRecertificacion = em.merge(recertificacionesNewRecertificacion);
+                    if (oldEspecializacionOfRecertificacionesNewRecertificacion != null && !oldEspecializacionOfRecertificacionesNewRecertificacion.equals(especializacion)) {
+                        oldEspecializacionOfRecertificacionesNewRecertificacion.getRecertificaciones().remove(recertificacionesNewRecertificacion);
+                        oldEspecializacionOfRecertificacionesNewRecertificacion = em.merge(oldEspecializacionOfRecertificacionesNewRecertificacion);
+                    }
+                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -109,6 +155,11 @@ public class EspecializacionJpaController implements Serializable {
             if (medico != null) {
                 medico.getEspecializaciones().remove(especializacion);
                 medico = em.merge(medico);
+            }
+            List<Recertificacion> recertificaciones = especializacion.getRecertificaciones();
+            for (Recertificacion recertificacionesRecertificacion : recertificaciones) {
+                recertificacionesRecertificacion.setEspecializacion(null);
+                recertificacionesRecertificacion = em.merge(recertificacionesRecertificacion);
             }
             em.remove(especializacion);
             em.getTransaction().commit();

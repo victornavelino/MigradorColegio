@@ -6,19 +6,20 @@
 package Controladores;
 
 import Controladores.exceptions.NonexistentEntityException;
-import Entidades.Pago.Pago;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import Entidades.Medico.Medico;
+import Entidades.Pago.Pago;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author hugo
+ * @author franco
  */
 public class PagoJpaController implements Serializable {
 
@@ -36,7 +37,16 @@ public class PagoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Medico medico = pago.getMedico();
+            if (medico != null) {
+                medico = em.getReference(medico.getClass(), medico.getId());
+                pago.setMedico(medico);
+            }
             em.persist(pago);
+            if (medico != null) {
+                medico.getPagos().add(pago);
+                medico = em.merge(medico);
+            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -50,7 +60,22 @@ public class PagoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Pago persistentPago = em.find(Pago.class, pago.getId());
+            Medico medicoOld = persistentPago.getMedico();
+            Medico medicoNew = pago.getMedico();
+            if (medicoNew != null) {
+                medicoNew = em.getReference(medicoNew.getClass(), medicoNew.getId());
+                pago.setMedico(medicoNew);
+            }
             pago = em.merge(pago);
+            if (medicoOld != null && !medicoOld.equals(medicoNew)) {
+                medicoOld.getPagos().remove(pago);
+                medicoOld = em.merge(medicoOld);
+            }
+            if (medicoNew != null && !medicoNew.equals(medicoOld)) {
+                medicoNew.getPagos().add(pago);
+                medicoNew = em.merge(medicoNew);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -79,6 +104,11 @@ public class PagoJpaController implements Serializable {
                 pago.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The pago with id " + id + " no longer exists.", enfe);
+            }
+            Medico medico = pago.getMedico();
+            if (medico != null) {
+                medico.getPagos().remove(pago);
+                medico = em.merge(medico);
             }
             em.remove(pago);
             em.getTransaction().commit();

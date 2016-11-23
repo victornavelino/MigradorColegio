@@ -18,7 +18,7 @@ import javax.persistence.criteria.Root;
 
 /**
  *
- * @author hugo
+ * @author franco
  */
 public class TipoDocumentoJpaController implements Serializable {
 

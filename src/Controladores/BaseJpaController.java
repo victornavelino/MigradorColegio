@@ -6,7 +6,7 @@
 package Controladores;
 
 import Controladores.exceptions.NonexistentEntityException;
-import Entidades.Medico.TipoEspecialidad;
+import Entidades.Base.Base;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -20,9 +20,9 @@ import javax.persistence.criteria.Root;
  *
  * @author franco
  */
-public class TipoEspecialidadJpaController implements Serializable {
+public class BaseJpaController implements Serializable {
 
-    public TipoEspecialidadJpaController(EntityManagerFactory emf) {
+    public BaseJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -31,12 +31,12 @@ public class TipoEspecialidadJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(TipoEspecialidad tipoEspecialidad) {
+    public void create(Base base) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(tipoEspecialidad);
+            em.persist(base);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -45,19 +45,19 @@ public class TipoEspecialidadJpaController implements Serializable {
         }
     }
 
-    public void edit(TipoEspecialidad tipoEspecialidad) throws NonexistentEntityException, Exception {
+    public void edit(Base base) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            tipoEspecialidad = em.merge(tipoEspecialidad);
+            base = em.merge(base);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Long id = tipoEspecialidad.getId();
-                if (findTipoEspecialidad(id) == null) {
-                    throw new NonexistentEntityException("The tipoEspecialidad with id " + id + " no longer exists.");
+                Long id = base.getId();
+                if (findBase(id) == null) {
+                    throw new NonexistentEntityException("The base with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -73,14 +73,14 @@ public class TipoEspecialidadJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            TipoEspecialidad tipoEspecialidad;
+            Base base;
             try {
-                tipoEspecialidad = em.getReference(TipoEspecialidad.class, id);
-                tipoEspecialidad.getId();
+                base = em.getReference(Base.class, id);
+                base.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The tipoEspecialidad with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The base with id " + id + " no longer exists.", enfe);
             }
-            em.remove(tipoEspecialidad);
+            em.remove(base);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -89,19 +89,19 @@ public class TipoEspecialidadJpaController implements Serializable {
         }
     }
 
-    public List<TipoEspecialidad> findTipoEspecialidadEntities() {
-        return findTipoEspecialidadEntities(true, -1, -1);
+    public List<Base> findBaseEntities() {
+        return findBaseEntities(true, -1, -1);
     }
 
-    public List<TipoEspecialidad> findTipoEspecialidadEntities(int maxResults, int firstResult) {
-        return findTipoEspecialidadEntities(false, maxResults, firstResult);
+    public List<Base> findBaseEntities(int maxResults, int firstResult) {
+        return findBaseEntities(false, maxResults, firstResult);
     }
 
-    private List<TipoEspecialidad> findTipoEspecialidadEntities(boolean all, int maxResults, int firstResult) {
+    private List<Base> findBaseEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(TipoEspecialidad.class));
+            cq.select(cq.from(Base.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -113,20 +113,20 @@ public class TipoEspecialidadJpaController implements Serializable {
         }
     }
 
-    public TipoEspecialidad findTipoEspecialidad(Long id) {
+    public Base findBase(Long id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(TipoEspecialidad.class, id);
+            return em.find(Base.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getTipoEspecialidadCount() {
+    public int getBaseCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<TipoEspecialidad> rt = cq.from(TipoEspecialidad.class);
+            Root<Base> rt = cq.from(Base.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

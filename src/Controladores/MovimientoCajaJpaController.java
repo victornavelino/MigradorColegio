@@ -6,7 +6,7 @@
 package Controladores;
 
 import Controladores.exceptions.NonexistentEntityException;
-import Entidades.Medico.TipoEspecialidad;
+import Entidades.Caja.MovimientoCaja;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -20,9 +20,9 @@ import javax.persistence.criteria.Root;
  *
  * @author franco
  */
-public class TipoEspecialidadJpaController implements Serializable {
+public class MovimientoCajaJpaController implements Serializable {
 
-    public TipoEspecialidadJpaController(EntityManagerFactory emf) {
+    public MovimientoCajaJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -31,12 +31,12 @@ public class TipoEspecialidadJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(TipoEspecialidad tipoEspecialidad) {
+    public void create(MovimientoCaja movimientoCaja) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(tipoEspecialidad);
+            em.persist(movimientoCaja);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -45,19 +45,19 @@ public class TipoEspecialidadJpaController implements Serializable {
         }
     }
 
-    public void edit(TipoEspecialidad tipoEspecialidad) throws NonexistentEntityException, Exception {
+    public void edit(MovimientoCaja movimientoCaja) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            tipoEspecialidad = em.merge(tipoEspecialidad);
+            movimientoCaja = em.merge(movimientoCaja);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Long id = tipoEspecialidad.getId();
-                if (findTipoEspecialidad(id) == null) {
-                    throw new NonexistentEntityException("The tipoEspecialidad with id " + id + " no longer exists.");
+                Long id = movimientoCaja.getId();
+                if (findMovimientoCaja(id) == null) {
+                    throw new NonexistentEntityException("The movimientoCaja with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -73,14 +73,14 @@ public class TipoEspecialidadJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            TipoEspecialidad tipoEspecialidad;
+            MovimientoCaja movimientoCaja;
             try {
-                tipoEspecialidad = em.getReference(TipoEspecialidad.class, id);
-                tipoEspecialidad.getId();
+                movimientoCaja = em.getReference(MovimientoCaja.class, id);
+                movimientoCaja.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The tipoEspecialidad with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The movimientoCaja with id " + id + " no longer exists.", enfe);
             }
-            em.remove(tipoEspecialidad);
+            em.remove(movimientoCaja);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -89,19 +89,19 @@ public class TipoEspecialidadJpaController implements Serializable {
         }
     }
 
-    public List<TipoEspecialidad> findTipoEspecialidadEntities() {
-        return findTipoEspecialidadEntities(true, -1, -1);
+    public List<MovimientoCaja> findMovimientoCajaEntities() {
+        return findMovimientoCajaEntities(true, -1, -1);
     }
 
-    public List<TipoEspecialidad> findTipoEspecialidadEntities(int maxResults, int firstResult) {
-        return findTipoEspecialidadEntities(false, maxResults, firstResult);
+    public List<MovimientoCaja> findMovimientoCajaEntities(int maxResults, int firstResult) {
+        return findMovimientoCajaEntities(false, maxResults, firstResult);
     }
 
-    private List<TipoEspecialidad> findTipoEspecialidadEntities(boolean all, int maxResults, int firstResult) {
+    private List<MovimientoCaja> findMovimientoCajaEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(TipoEspecialidad.class));
+            cq.select(cq.from(MovimientoCaja.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -113,20 +113,20 @@ public class TipoEspecialidadJpaController implements Serializable {
         }
     }
 
-    public TipoEspecialidad findTipoEspecialidad(Long id) {
+    public MovimientoCaja findMovimientoCaja(Long id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(TipoEspecialidad.class, id);
+            return em.find(MovimientoCaja.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getTipoEspecialidadCount() {
+    public int getMovimientoCajaCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<TipoEspecialidad> rt = cq.from(TipoEspecialidad.class);
+            Root<MovimientoCaja> rt = cq.from(MovimientoCaja.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
