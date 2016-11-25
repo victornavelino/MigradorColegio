@@ -65,6 +65,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
@@ -105,14 +106,12 @@ public class ImportarExcelMedicosNew {
             excel.crearLocalidades();
             excel.crearUniversidades();
             excel.importar();//LEGAJOMEDICO.xls --> MEDICOS        }
-        }   else {
-           JOptionPane.showMessageDialog(null, "GOODBYE");
-           System.exit(0);
+        } else {
+            JOptionPane.showMessageDialog(null, "GOODBYE");
+            System.exit(0);
         }
 
-        }
-
-    
+    }
 
     private void crearSexo() {
         Sexo sexo = new SexoJpaController(emf).findSexo(1L);
@@ -168,8 +167,10 @@ public class ImportarExcelMedicosNew {
             importarEspecialidad(fileChooser);
             importarLegajoMedico(fileChooser);
             importarEspecializacionMedica(fileChooser);
+            importarEspecialidadDelLegajo(fileChooser);
             importarPagos(fileChooser);
             importarRecertificacion(fileChooser);
+            
         }
     }
 
@@ -263,6 +264,7 @@ public class ImportarExcelMedicosNew {
                             break;
                         case "7":
                             //Nacionalidad
+                            //AGREGAR PAISES
                             break;
                         case "8":
                             //Provincia
@@ -281,6 +283,7 @@ public class ImportarExcelMedicosNew {
                                 try {
                                     Localidad localidad = new LocalidadJpaController(emf).findLocalidad(Long.parseLong(dato));
                                     medico.getPersona().getDomicilio().setLocalidad(localidad);
+                                    medico.getPersona().setLugarNacimiento(localidad);
                                 } catch (Exception e) {
                                 }
                             }//le cargo la localidad que asigne a cada departamento, despues agregamos las que faltan
@@ -519,6 +522,249 @@ public class ImportarExcelMedicosNew {
                 }//fin for columnas
                 MedicoFacade.getInstance().alta(medico);
 
+            } //fin for filas
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ImportarExcelMedicosNew.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ImportarExcelMedicosNew.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BiffException ex) {
+            Logger.getLogger(ImportarExcelMedicosNew.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void importarEspecialidadDelLegajo(JFileChooser fileChooser) {
+        try {
+            System.out.println("Importando Legajo Medico  ...");
+            String ruta = fileChooser.getSelectedFile().getAbsolutePath() + File.separator + archivo;
+            File selectedFile = new File(ruta);
+            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            boolean flag = true;
+            InputStream in = null;
+            in = new FileInputStream(selectedFile);
+
+            WorkbookSettings ws = new WorkbookSettings();
+            ws.setEncoding("Cp1252");
+            Workbook workbook = Workbook.getWorkbook(in, ws);
+            Sheet sheet = workbook.getSheet(20);
+            String dato;
+            // Recorre cada fila de la  hoja
+            for (int fila = 1; fila < sheet.getRows(); fila++) {
+                Medico medico = new Medico();
+                Especializacion especializacion = new Especializacion();
+                Especialidad especialidad = null;
+                UnidadFormadora unidadFormadora = null;
+                boolean guarda = false;
+                for (int columna = 0; columna < sheet.getColumns(); columna++) { // Recorre  cada columna
+                    dato = sheet.getCell(columna, fila).getContents();
+
+                    switch (String.valueOf(columna)) {
+                        case "0":
+                            try {
+                                if (!dato.contains("NULL") && !dato.isEmpty()) {
+                                    medico = MedicoFacade.getInstance().buscarPorMatricula(Integer.parseInt(dato));
+                                    especializacion.setMedico(medico);
+                                }
+                            } catch (Exception e) {
+                            }
+                            break;
+                        case "1":
+                            try {
+
+                            } catch (Exception e) {
+                            }
+                            break;
+                        case "2":
+                            try {
+
+                            } catch (Exception e) {
+                            }
+                            break;
+                        case "3":
+                            try {
+                            } catch (Exception e) {
+                            }
+                            break;
+                        case "4":
+                            try {
+
+                            } catch (NumberFormatException numberFormatException) {
+                            }
+                            break;
+                        case "5":
+
+                            break;
+                        case "6":
+                            try {
+
+                            } catch (NumberFormatException numberFormatException) {
+                            }
+                            break;
+                        case "7":
+                            //Nacionalidad
+                            //CARGAR ..........
+                            break;
+                        case "8":
+                            //Provincia
+
+                            break;
+                        case "9":
+                            //Departamento
+                            break;
+
+                        case "10":
+                            //Localidad
+
+                            break;
+
+                        case "11":
+                            //barrio
+                            break;
+                        case "12":
+                            //Calle
+                            break;
+                        case "13":
+                            //numero
+                            break;
+                        case "14":
+                            //piso
+                            break;
+                        case "15":
+                            //dpto
+                            break;
+                        case "16":
+                            //codigio postal
+                            break;
+                        case "17":
+                            //Telefono
+                            break;
+                        case "18":
+                            //Celular
+
+                            break;
+                        case "19":
+
+                            break;
+                        case "20": {
+
+                        }
+                        break;
+                        case "21":
+                            //TITULO
+
+                            break;
+                        case "22":
+                            //IDESPECIALIDAD
+
+                            try {
+                                if (!dato.contains("NULL") && !dato.isEmpty() && !"0".equals(dato)) {
+                                    especialidad = EspecialidadFacade.getInstance().buscarPorCodigo(Long.parseLong(dato));
+                                    guarda = true;
+                                }
+
+                            } catch (Exception e) {
+                            }
+                            if (medico.getEspecializaciones().isEmpty()) {
+                                if (!dato.contains("NULL") && !dato.isEmpty()) {
+                                    especializacion.setEspecialidad(especialidad);
+                                }
+                            } else {
+                                Boolean existe = false;
+                                for (Especializacion e : medico.getEspecializaciones()) {
+                                    try {
+                                        if (Objects.equals(e.getEspecialidad().getCodigoEspecilidad(), especialidad.getCodigoEspecilidad())) {
+                                            existe = true;
+                                        }
+                                    } catch (Exception ex) {
+                                    }
+
+                                }
+                                if (!existe) {
+                                    especializacion.setEspecialidad(especialidad);
+                                }
+                            }
+//                           
+                            break;
+                        case "23": {
+
+                        }
+                        break;
+                        case "24":
+                            //UNIVERSIDAD
+
+                            break;
+                        case "25":
+                            //FACULTAD
+//                            Facultad facultad = new Facultad();
+//                            try {
+//                                facultad = new FacultadJpaController(emf).findFacultad(Long.parseLong(dato)); //TODO aca hay que validar por nombre
+//                                if (facultad == null) {
+//                                    facultad = new Facultad();
+//                                    facultad.setId(Long.parseLong(dato));
+//                                    facultad.setDescripcion(dato);
+//                                    new FacultadJpaController(emf).create(facultad);
+//                                }
+//                            } catch (NumberFormatException numberFormatException) {
+//                            }
+//                            unidadFormadora.setFacultad(facultad);
+                            break;
+                        case "26":
+                            //PROVINCIARECIBIDO
+//                            unidadFormadora.setLocalidad(null);
+//                            especializacion.setUnidadFormadora(unidadFormadora);
+
+                            break;
+                        case "27":
+                            //NOMBREUSUARIO
+                            break;
+                        case "28":
+                        //TIPOUSUARIO
+                        case "29":
+                            //FECHAREGISTRO
+                            break;
+                        case "30":
+                            //HORAREGISTRO
+                            break;
+                        case "31":
+                            //FECHABAJA
+
+                            break;
+                        case "32":
+                            //MOTIVOBAJA
+
+                            break;
+                        case "33":
+                            //MATRICULANACIONAL
+                            break;
+                        case "34":
+                            //NROINSCRIPCION
+                            break;
+                        case "35":
+                            //TIPOSOCIO
+
+                            break;
+                        case "36":
+                            //ORGANISMO
+
+                            break;
+                        case "37":
+                            //LIBROINSCRIPCION
+
+                            break;
+                        case "38":
+                            //FOLIOINSCRIPCION
+
+                            break;
+                        case "39":
+                            //FECHATITULO
+
+                            break;
+                    }//fin switch
+
+                }//fin for columnas
+                if (guarda) {
+                    new EspecializacionJpaController(emf).create(especializacion);
+
+                }
             } //fin for filas
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ImportarExcelMedicosNew.class.getName()).log(Level.SEVERE, null, ex);
