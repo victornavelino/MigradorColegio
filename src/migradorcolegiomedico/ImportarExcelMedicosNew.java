@@ -170,7 +170,7 @@ public class ImportarExcelMedicosNew {
             importarEspecialidadDelLegajo(fileChooser);
             importarPagos(fileChooser);
             importarRecertificacion(fileChooser);
-            
+
         }
     }
 
@@ -187,7 +187,7 @@ public class ImportarExcelMedicosNew {
             WorkbookSettings ws = new WorkbookSettings();
             ws.setEncoding("Cp1252");
             Workbook workbook = Workbook.getWorkbook(in, ws);
-            Sheet sheet = workbook.getSheet(20);
+            Sheet sheet = workbook.getSheet("LegajoMedicos");
             String dato;
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
@@ -545,7 +545,7 @@ public class ImportarExcelMedicosNew {
             WorkbookSettings ws = new WorkbookSettings();
             ws.setEncoding("Cp1252");
             Workbook workbook = Workbook.getWorkbook(in, ws);
-            Sheet sheet = workbook.getSheet(20);
+            Sheet sheet = workbook.getSheet("LegajoMedicos");
             String dato;
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
@@ -659,28 +659,29 @@ public class ImportarExcelMedicosNew {
                                 if (!dato.contains("NULL") && !dato.isEmpty() && !"0".equals(dato)) {
                                     especialidad = EspecialidadFacade.getInstance().buscarPorCodigo(Long.parseLong(dato));
                                     guarda = true;
-                                }
-
-                            } catch (Exception e) {
-                            }
-                            if (medico.getEspecializaciones().isEmpty()) {
-                                if (!dato.contains("NULL") && !dato.isEmpty()) {
-                                    especializacion.setEspecialidad(especialidad);
-                                }
-                            } else {
-                                Boolean existe = false;
-                                for (Especializacion e : medico.getEspecializaciones()) {
-                                    try {
-                                        if (Objects.equals(e.getEspecialidad().getCodigoEspecilidad(), especialidad.getCodigoEspecilidad())) {
-                                            existe = true;
+                                    if (medico.getEspecializaciones().isEmpty()) {
+                                        if (!dato.contains("NULL") && !dato.isEmpty()) {
+                                            especializacion.setEspecialidad(especialidad);
                                         }
-                                    } catch (Exception ex) {
+                                    } else {
+                                        Boolean existe = false;
+                                        for (Especializacion e : medico.getEspecializaciones()) {
+                                            try {
+                                                if (Objects.equals(e.getEspecialidad().getCodigoEspecilidad(), especialidad.getCodigoEspecilidad())) {
+                                                    existe = true;
+                                                }
+                                            } catch (Exception ex) {
+                                            }
+
+                                        }
+                                        if (!existe) {
+                                            especializacion.setEspecialidad(especialidad);
+                                        }
                                     }
 
                                 }
-                                if (!existe) {
-                                    especializacion.setEspecialidad(especialidad);
-                                }
+
+                            } catch (Exception e) {
                             }
 //                           
                             break;
@@ -788,7 +789,7 @@ public class ImportarExcelMedicosNew {
             WorkbookSettings ws = new WorkbookSettings();
             ws.setEncoding("Cp1252");
             Workbook workbook = Workbook.getWorkbook(in, ws);
-            Sheet sheet = workbook.getSheet(13);
+            Sheet sheet = workbook.getSheet("EspecialidadesPorMedico");
             String dato;
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
@@ -929,7 +930,7 @@ public class ImportarExcelMedicosNew {
             WorkbookSettings ws = new WorkbookSettings();
             ws.setEncoding("Cp1252");
             Workbook workbook = Workbook.getWorkbook(in, ws);
-            Sheet sheet = workbook.getSheet(12);
+            Sheet sheet = workbook.getSheet("Especialidades");
             String dato;
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
@@ -1000,7 +1001,7 @@ public class ImportarExcelMedicosNew {
             WorkbookSettings ws = new WorkbookSettings();
             ws.setEncoding("Cp1252");
             Workbook workbook = Workbook.getWorkbook(in, ws);
-            Sheet sheet = workbook.getSheet(10);
+            Sheet sheet = workbook.getSheet("DetallePagos");
             String dato;
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
@@ -1174,7 +1175,7 @@ public class ImportarExcelMedicosNew {
             WorkbookSettings ws = new WorkbookSettings();
             ws.setEncoding("Cp1252");
             Workbook workbook = Workbook.getWorkbook(in, ws);
-            Sheet sheet = workbook.getSheet(29);
+            Sheet sheet = workbook.getSheet("Recertificaciones");
             String dato;
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
@@ -1660,13 +1661,6 @@ public class ImportarExcelMedicosNew {
         if (tde == null) {
             tde = new TipoDeEgreso();
             tde.setId(4L);
-            tde.setDescripcion("REFRIGERIOS");
-            new TipoDeEgresoJpaController(emf).create(tde);
-        }
-        tde = new TipoDeEgresoJpaController(emf).findTipoDeEgreso(5L);
-        if (tde == null) {
-            tde = new TipoDeEgreso();
-            tde.setId(5L);
             tde.setDescripcion("REFRIGERIOS");
             new TipoDeEgresoJpaController(emf).create(tde);
         }
