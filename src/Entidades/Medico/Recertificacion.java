@@ -44,6 +44,15 @@ public class Recertificacion implements Serializable {
     private String observaciones;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaVencimiento;
+    private int puntaje;
+
+    public int getPuntaje() {
+        return puntaje;
+    }
+
+    public void setPuntaje(int puntaje) {
+        this.puntaje = puntaje;
+    }
 
     public Long getId() {
         return id;

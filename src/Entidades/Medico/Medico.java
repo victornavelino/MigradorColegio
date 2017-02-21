@@ -6,6 +6,7 @@
 package Entidades.Medico;
 
 import Entidades.Base.Archivo;
+import Entidades.Caja.MovimientoCaja;
 import Entidades.Pago.Pago;
 import Entidades.Pago.PlanPago;
 import Entidades.Persona.Persona;
@@ -40,7 +41,9 @@ import javax.persistence.Temporal;
 @Entity
 @Table(name = "medico")
 public class Medico implements Serializable {
-
+    
+    @OneToOne
+    private MovimientoCaja movimientoCaja;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -80,6 +83,14 @@ public class Medico implements Serializable {
     private List<Pago> pagos;
     @Lob
     private String observaciones;
+
+    public MovimientoCaja getMovimientoCaja() {
+        return movimientoCaja;
+    }
+
+    public void setMovimientoCaja(MovimientoCaja movimientoCaja) {
+        this.movimientoCaja = movimientoCaja;
+    }
 
     public String getResolucionBaja() {
         return resolucionBaja;
