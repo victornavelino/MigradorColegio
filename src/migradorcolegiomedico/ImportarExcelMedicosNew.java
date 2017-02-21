@@ -656,18 +656,17 @@ public class ImportarExcelMedicosNew {
                             //IDESPECIALIDAD
 
                             try {
-                                if (!dato.contains("NULL") && !dato.isEmpty() && !"0".equals(dato)) {
+                                if (!dato.contains("NULL") && !dato.isEmpty() && !dato.equals("0")) {
+
                                     especialidad = EspecialidadFacade.getInstance().buscarPorCodigo(Long.parseLong(dato));
                                     guarda = true;
                                     if (medico.getEspecializaciones().isEmpty()) {
-                                        if (!dato.contains("NULL") && !dato.isEmpty()) {
-                                            especializacion.setEspecialidad(especialidad);
-                                        }
+                                        especializacion.setEspecialidad(especialidad);
                                     } else {
                                         Boolean existe = false;
                                         for (Especializacion e : medico.getEspecializaciones()) {
                                             try {
-                                                if (Objects.equals(e.getEspecialidad().getCodigoEspecilidad(), especialidad.getCodigoEspecilidad())) {
+                                                if (e.getEspecialidad().getCodigoEspecilidad().equals(especialidad.getCodigoEspecilidad())) {
                                                     existe = true;
                                                 }
                                             } catch (Exception ex) {
@@ -821,9 +820,11 @@ public class ImportarExcelMedicosNew {
                         case "2":
                             //ESPECIALIDAD	
                             try {
-                                if (!dato.contains("NULL") && !dato.isEmpty() && !"0".equals(dato)) {
+                                if (!dato.contains("NULL") && !dato.isEmpty() && !dato.equals("0")) {
                                     especialidad = EspecialidadFacade.getInstance().buscarPorCodigo(Long.parseLong(dato));
                                     guarda = true;
+                                } else {
+                                    guarda = false;
                                 }
 
                             } catch (Exception e) {
@@ -835,7 +836,7 @@ public class ImportarExcelMedicosNew {
                         case "3":
                             //MATRICULAESPECIALIDAD
                             try {
-                                if (!dato.contains("NULL") && !dato.isEmpty() && !"0".equals(dato)) {
+                                if (!dato.contains("NULL") && !dato.isEmpty() && !dato.equals("0")) {
                                     especializacion.setMatriculaEspecialidad(Integer.parseInt(dato));
                                     guarda = true;
                                 } else {
@@ -935,6 +936,7 @@ public class ImportarExcelMedicosNew {
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
                 Especialidad especialidad = new Especialidad();
+                boolean guarda = false;
                 for (int columna = 0; columna < sheet.getColumns(); columna++) { // Recorre  cada fila
                     dato = sheet.getCell(columna, fila).getContents();
                     Cell cell = sheet.getCell(columna, fila);
@@ -953,8 +955,13 @@ public class ImportarExcelMedicosNew {
                             //ESPECIALIDAD
 
                             try {
-                                especialidad.setDescripcion(dato);
-                                especialidad.setNombreEspecialidad(dato);
+                                if (!dato.contains("NULL") && !dato.isEmpty()) {
+                                    especialidad.setDescripcion(dato);
+                                    especialidad.setNombreEspecialidad(dato);
+                                    guarda = true;
+                                } else {
+                                    guarda = false;
+                                }
 
                             } catch (Exception e) {
                             }
@@ -970,7 +977,9 @@ public class ImportarExcelMedicosNew {
 
                     }
                 }
-                new EspecialidadJpaController(emf).create(especialidad);
+                if (guarda) {
+                    new EspecialidadJpaController(emf).create(especialidad);
+                }
 
             }
         } catch (FileNotFoundException ex) {
