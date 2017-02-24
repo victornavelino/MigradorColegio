@@ -6,6 +6,7 @@
 package Entidades.Caja;
 
 import Entidades.Base.Base;
+import Entidades.Medico.Medico;
 import Entidades.Usuario.Usuario;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -55,6 +57,17 @@ public class MovimientoCaja extends Base implements Serializable {
 
     private int nroComprobante;
 
+    @ManyToOne
+    private Medico medico;
+
+    public Medico getMedico() {
+        return medico;
+    }
+
+    public void setMedico(Medico medico) {
+        this.medico = medico;
+    }
+   
     public int getNroComprobante() {
         return nroComprobante;
     }

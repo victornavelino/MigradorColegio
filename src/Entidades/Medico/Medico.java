@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,15 +36,18 @@ import javax.persistence.Temporal;
     @NamedQuery(name = "Medico.buscarXApellido", query = "SELECT m FROM Medico m WHERE m.persona.apellido LIKE :apellido"),
     @NamedQuery(name = "Medico.buscarXMatricula", query = "SELECT m FROM Medico m WHERE m.matriculaProfesional LIKE :matriculaProfesional"),
     @NamedQuery(name = "Medico.buscarUltimaMatricula", query = "SELECT max(m.matriculaProfesional) FROM Medico m "),
-    @NamedQuery(name = "Medico.buscarMedicosDeudores", query = "SELECT med FROM Medico med WHERE med.tipoSocio.id = 1 EXCEPT SELECT m FROM Medico m where m.id NOT IN (SELECT p.medico.id FROM Pago p where p.anio>=:anio AND p.mes>=:mes)")
+    @NamedQuery(name = "Medico.buscarTodosActivos", query = "SELECT m FROM Medico m WHERE m.tipoSocio.descripcion ='ACTIVO'"),
+    @NamedQuery(name = "Medico.buscarMedicosDeudores", query = "SELECT med FROM Medico med WHERE med.tipoSocio.id = 1 EXCEPT SELECT m FROM Medico m where m.id NOT IN (SELECT p.medico.id FROM Pago p where p.anio>=:anio AND p.mes>=:mes)"),
+    @NamedQuery(name = "Medico.buscarMedicosDeudoresEntre", query = "SELECT med FROM Medico med WHERE med.tipoSocio.id = 1 EXCEPT SELECT m FROM Medico m where m.id NOT IN (SELECT p.medico.id FROM Pago p where p.anio>=:anio AND p.mes>=:mes) EXCEPT SELECT m FROM Medico m where m.id NOT IN (SELECT p.medico.id FROM Pago p where p.anio>=:anio2 AND p.mes>=:mes2) ")
 })
 
 @Entity
 @Table(name = "medico")
 public class Medico implements Serializable {
-    
-    @OneToOne
-    private MovimientoCaja movimientoCaja;
+
+    @OneToMany(mappedBy = "medico")
+    private List<MovimientoCaja> movimientoCajas;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,7 +79,7 @@ public class Medico implements Serializable {
     private Integer libro;
     private Integer folio;
     private String nroRegistro;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Archivo archivo;
     @OneToMany(mappedBy = "medico")
     private List<PlanPago> planPagos;
@@ -84,12 +88,12 @@ public class Medico implements Serializable {
     @Lob
     private String observaciones;
 
-    public MovimientoCaja getMovimientoCaja() {
-        return movimientoCaja;
+    public List<MovimientoCaja> getMovimientoCajas() {
+        return movimientoCajas;
     }
 
-    public void setMovimientoCaja(MovimientoCaja movimientoCaja) {
-        this.movimientoCaja = movimientoCaja;
+    public void setMovimientoCajas(List<MovimientoCaja> movimientoCajas) {
+        this.movimientoCajas = movimientoCajas;
     }
 
     public String getResolucionBaja() {
@@ -123,7 +127,7 @@ public class Medico implements Serializable {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
-    
+
     public Archivo getArchivo() {
         return archivo;
     }
@@ -268,10 +272,23 @@ public class Medico implements Serializable {
         this.folio = folio;
     }
 
+    public List<MovimientoCaja> getAranceles() {
+        List<MovimientoCaja> cajas = getMovimientoCajas();
+        try {
+            for (MovimientoCaja m : cajas) {
+                if (m.getTipoMovimiento().equalsIgnoreCase("MANTENIMIENTO")) {
+                    cajas.remove(m);
+                }
+            }
+        } catch (Exception e) {
+        }
+        return cajas;
+    }
+
     @Override
     public String toString() {
         try {
-            return persona.toString();
+            return matriculaProfesional + " - " + persona.toString();
         } catch (Exception e) {
             return "";
         }

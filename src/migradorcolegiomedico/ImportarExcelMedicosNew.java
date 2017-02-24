@@ -63,6 +63,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -90,22 +91,24 @@ public class ImportarExcelMedicosNew {
         ImportarExcelMedicosNew excel = new ImportarExcelMedicosNew();
         int reply = JOptionPane.showConfirmDialog(null, "¿Es una migración desde cero?", "Importador", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
-            excel.crearUsuario();
-            excel.crearOrganismo();
-            excel.crearSexo();
-            excel.crearTipoTelefono();
-            excel.crearBanco();
-            excel.crearCuenta();
-            excel.crearTipoMedico();
-            excel.crearTipoEgreso();
-            excel.crearTipoIngreso();
-            excel.crearTipoDocumento();
-            excel.crearEstadosCiviles();
-            excel.crearProvincias();
-            excel.crearDepartamentos();
-            excel.crearLocalidades();
-            excel.crearUniversidades();
-            excel.importar();//LEGAJOMEDICO.xls --> MEDICOS        }
+            /* excel.crearUsuario();
+             excel.crearOrganismo();
+             excel.crearSexo();
+             excel.crearTipoTelefono();
+             excel.crearBanco();
+             excel.crearCuenta();
+             excel.crearTipoMedico();
+             excel.crearTipoEgreso();
+             excel.crearTipoIngreso();
+             excel.crearTipoDocumento();
+             excel.crearEstadosCiviles();
+             excel.crearProvincias();
+             excel.crearDepartamentos();
+             excel.crearLocalidades();
+             excel.crearUniversidades();*/
+            // excel.importar();//LEGAJOMEDICO.xls --> MEDICOS        }
+
+        //    excel.modificarFechasVencimiento();
         } else {
             JOptionPane.showMessageDialog(null, "GOODBYE");
             System.exit(0);
@@ -164,11 +167,11 @@ public class ImportarExcelMedicosNew {
 
         int result = fileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
-            importarEspecialidad(fileChooser);
-            importarLegajoMedico(fileChooser);
+            //  importarEspecialidad(fileChooser);
+            //importarLegajoMedico(fileChooser);
             importarEspecializacionMedica(fileChooser);
             importarEspecialidadDelLegajo(fileChooser);
-            importarPagos(fileChooser);
+            //importarPagos(fileChooser);
             importarRecertificacion(fileChooser);
 
         }
@@ -793,9 +796,9 @@ public class ImportarExcelMedicosNew {
             // Recorre cada fila de la  hoja
             for (int fila = 1; fila < sheet.getRows(); fila++) {
                 Especializacion especializacion = new Especializacion();
-                Especialidad especialidad = null;
-                UnidadFormadora unidadFormadora = null;
-                Medico medico;
+                Especialidad especialidad = new Especialidad();
+                UnidadFormadora unidadFormadora = new UnidadFormadora();
+                Medico medico = new Medico();
                 boolean guarda = false;
 
                 for (int columna = 0; columna < sheet.getColumns(); columna++) { // Recorre  cada columna
@@ -808,6 +811,9 @@ public class ImportarExcelMedicosNew {
                                 if (!dato.contains("NULL") && !dato.isEmpty()) {
                                     medico = MedicoFacade.getInstance().buscarPorMatricula(Integer.parseInt(dato));
                                     especializacion.setMedico(medico);
+                                    guarda = true;
+                                } else {
+                                    guarda = false;
                                 }
                             } catch (Exception e) {
                             }
@@ -822,6 +828,8 @@ public class ImportarExcelMedicosNew {
                             try {
                                 if (!dato.contains("NULL") && !dato.isEmpty() && !dato.equals("0")) {
                                     especialidad = EspecialidadFacade.getInstance().buscarPorCodigo(Long.parseLong(dato));
+                                    especializacion.setEspecialidad(especialidad);
+
                                     guarda = true;
                                 } else {
                                     guarda = false;
@@ -829,9 +837,7 @@ public class ImportarExcelMedicosNew {
 
                             } catch (Exception e) {
                             }
-                            if (!dato.contains("NULL") && !dato.isEmpty()) {
-                                especializacion.setEspecialidad(especialidad);
-                            }
+
                             break;
                         case "3":
                             //MATRICULAESPECIALIDAD
@@ -1903,6 +1909,46 @@ public class ImportarExcelMedicosNew {
             td.setId(id);
             td.setDescripcion(descripcion.toUpperCase());
             new UnidadFormadoraJpaController(emf).create(td);
+        }
+
+    }
+
+    private void modificarFechasVencimiento() {
+
+        EspecializacionJpaController controller = new EspecializacionJpaController(emf);
+        List<Especializacion> findEspecializacionEntities = controller.findEspecializacionEntities();
+        for (Especializacion e : findEspecializacionEntities) {
+            if (e.getFechaMatriculacion() != null) {
+                if (e.getFechaVencimiento() == null) {
+                    try {
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(e.getFechaMatriculacion());
+                        c.add(Calendar.YEAR, 5);
+                        e.setFechaVencimiento(c.getTime());
+                        controller.edit(e);
+                    } catch (Exception ex) {
+                        Logger.getLogger(ImportarExcelMedicosNew.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+
+        RecertificacionJpaController c2 = new RecertificacionJpaController(emf);
+        List<Recertificacion> es = c2.findRecertificacionEntities();
+        for (Recertificacion e : es) {
+            if (e.getFechaRecertificacion()!= null) {
+                if (e.getFechaVencimiento() == null) {
+                    try {
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(e.getFechaRecertificacion());
+                        c.add(Calendar.YEAR, 5);
+                        e.setFechaVencimiento(c.getTime());
+                        c2.edit(e);
+                    } catch (Exception ex) {
+                        Logger.getLogger(ImportarExcelMedicosNew.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
         }
 
     }
